@@ -1,6 +1,4 @@
-**Due to sudden changes in Minecraft's/Xbox's authentication system and Hive dropping all versions below 1.20 because of that, this project is discontinued**
-
-**This is independent of Borion and does NOT contain any Borion specific code**
+**1.20.0X**
 
 <div align="center">
   <br />
