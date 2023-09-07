@@ -23,7 +23,7 @@ void Reach::onTick(GameMode* gm) {
 void Reach::onEnable() {
 	static uintptr_t sigOffset = 0x0;
 	if (sigOffset == 0x0) {
-		sigOffset = FindSignature("F3 0F 59 ? ? ? ? ? F3 0F 10 ? ? ? ? ? F3 0F 11 ? ? ? 0F 57 DB");
+		sigOffset = FindSignature("F3 0F 10 ? ? ? ? ? F3 0F 10 ? ? ? ? ? 0F 29 70 ? 0F 57 F6");
 
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 4));  // Get Offset from code

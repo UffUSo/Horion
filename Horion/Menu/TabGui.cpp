@@ -181,7 +181,7 @@ void TabGui::render() {
 		std::vector<std::shared_ptr<IModule>>* modules = moduleMgr->getModuleList();
 		for (const auto& mod : *modules) {
 			if (selected[0].selectedItemId == static_cast<int>(mod->getCategory())) {
-				auto name = mod->getModuleName();
+				auto name = mod->getRawModuleName();
 				renderLabel(name, mod);
 			}
 		}

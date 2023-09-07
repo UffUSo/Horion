@@ -12,7 +12,7 @@ BaseActorRenderContext::BaseActorRenderContext(ScreenContext *ScreenCtx, ClientI
 }
 void ItemRenderer::renderGuiItemNew(BaseActorRenderContext *BaseActorRenderCtx, ItemStack *item, int mode, float x, float y, float opacity, float scale, bool isEnchanted) {
 	using renderGuiItemNew_t = void(__fastcall *)(ItemRenderer *, BaseActorRenderContext *, ItemStack *, int, float, float, bool, float, float, float);
-	static renderGuiItemNew_t renderGuiItemNew = reinterpret_cast<renderGuiItemNew_t>(FindSignature("40 53 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 0F 29 B4 ? ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 8B E1"));
+	static renderGuiItemNew_t renderGuiItemNew = reinterpret_cast<renderGuiItemNew_t>(FindSignature("48 8B C4 53 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 8B E1"));
 	//item->setShowPickUp(false);
 	renderGuiItemNew(this, BaseActorRenderCtx, item, mode, x, y, isEnchanted, opacity, 0, scale);
 }
@@ -28,7 +28,7 @@ void ItemRenderer::renderGuiItemInChunk(BaseActorRenderContext *BaseActorRenderC
 ItemStack::ItemStack(const ItemStack &src) {
 	memset(this, 0x0, sizeof(ItemStack));
 	using ItemStackCopyConstructor_t = void(__fastcall *)(ItemStack &, ItemStack const &);
-	static ItemStackCopyConstructor_t ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(FindSignature("48 89 5C 24 ? 57 48 83 EC 20 48 8B D9 8B FA 48 81 C1 ? ? ? ? 48 0F BE 41 ?"));
+	static ItemStackCopyConstructor_t ItemStackCopyConstructor = reinterpret_cast<ItemStackCopyConstructor_t>(FindSignature("48 89 4C 24 ? 53 55 56 57 41 54 41 55 41 56 41 57 48 83 EC ? 48 8B EA"));
 	ItemStackCopyConstructor(*this, src);
 	this->setVtable();
 }
@@ -44,7 +44,7 @@ ItemStack::ItemStack(const Tag &tag) {
 
 void ItemStack::fromTag(const Tag &tag) {
 	using ItemStackBase__loadItemF = void(__fastcall *)(ItemStack *, Tag const &);
-	static ItemStackBase__loadItemF fromTag = reinterpret_cast<ItemStackBase__loadItemF>(FindSignature("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B DA 48 8B F9 48 89 4D"));
+	static ItemStackBase__loadItemF fromTag = reinterpret_cast<ItemStackBase__loadItemF>(FindSignature("48 89 5C ? ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC ? ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B EA 48 8B F1 48 89 4C ? ? 45 33 E4"));
 	fromTag(this, tag);
 }
 
@@ -74,7 +74,7 @@ int ItemStack::getEnchantValue(int enchantId) {
 
 void ItemStack::setLore(std::string customLore) {
 	using setCustomLore_t = void(__fastcall *)(ItemStack*, TextHolder**);
-	setCustomLore_t setCustomLore = reinterpret_cast<setCustomLore_t>(FindSignature("48 8B C4 48 89 58 ? 48 89 70 ? 55 57 41 54 41 56 41 57 48 8D 68 ? 48 81 EC ? ? ? ? 0F 29 70 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B F2"));
+	setCustomLore_t setCustomLore = reinterpret_cast<setCustomLore_t>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B F2 48 8B 41"));
 	TextHolder lore = customLore;
 	TextHolder *pText = &lore;
 	TextHolder *vec[] = {pText, &pText[1], &pText[1]};
@@ -89,26 +89,26 @@ void ItemStack::setName(std::string customName) {
 }
 
 void ItemStack::setVtable(void) {
-	static uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 07 4C 8D 83");
+	static uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 05 ? ? ? ? C7 ? ? ? ? ? ? ? ? ? C6 05 ? ? ? ? ? 48 8D 0D ? ? ? ? 48 83 C4");
 	int offset = *reinterpret_cast<int *>(sigOffset + 3);
 	this->vTable = reinterpret_cast<uintptr_t **>(sigOffset + offset + /*length of instruction*/ 7);
 }
 
 Item ***ItemRegistry::getItemFromId(void *ptr, int itemId) {
 	using getItemFromId_t = Item ***(__fastcall *)(void *, int);
-	static getItemFromId_t getItemFromId = reinterpret_cast<getItemFromId_t>(FindSignature("40 53 48 83 EC ? 8D 42 ? 48 8B D9 66 83 F8 ? 0F 86 ? ? ? ? 44 0F BF C2 49 B9 ? ? ? ? ? ? ? ? 41 8B C0"));
+	static getItemFromId_t getItemFromId = reinterpret_cast<getItemFromId_t>(FindSignature("40 53 48 83 EC 20 41 8D 40 01"));
 	return getItemFromId(ptr, itemId);
 }
 
 Item ***ItemRegistry::lookUpByName(void *a1, void *a2, TextHolder &text) {
 	using ItemRegistry__lookupByName_t = Item ***(__fastcall *)(void *, void *, TextHolder &);
-	static ItemRegistry__lookupByName_t ItemRegistry__lookupByNameF = reinterpret_cast<ItemRegistry__lookupByName_t>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B EA 48 8B F1 48 89 4D ? 49 83 78"));
+	static ItemRegistry__lookupByName_t ItemRegistry__lookupByNameF = reinterpret_cast<ItemRegistry__lookupByName_t>(FindSignature("48 89 5C ? ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 ? ? 48 8B DA 4C 8B C9"));
 	return ItemRegistry__lookupByNameF(a1, a2, text);
 }
 
 void ItemDescriptor::fromStack(ItemStack *item) { //all credit to horion continued and floppy dolphin for this
 	using ItemDescriptor_ctorT = void (*)(ItemDescriptor *, ItemStack *);
-	static ItemDescriptor_ctorT ItemDescriptor_ctor = (ItemDescriptor_ctorT)FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 48 8B EA 48 8B F9 48 89 4C 24 ? 0F B6 5A ? 48 8D 54 24 ? 48 8B CD E8 ? ? ? ? 90 48 8B D0 48 8B CF E8 ? ? ? ? 66 89 5F ? 48 8D 4C 24 ? E8 ? ? ? ? 48 8B 5C 24 ? 48 85 DB 74 ? BE ? ? ? ? 8B C6 F0 0F C1 43 ? 83 F8 ? 75 ? 48 8B 03 48 8B CB FF 10 F0 0F C1 73 ? 83 FE ? 75 ? 48 8B 03 48 8B CB FF 50 ? 48 8B 4C 24 ? 48 85 C9 74 ? F0 FF 49 ? 8B 41 ? 90 85 C0 7F ? 48 83 39 ? 75 ? 48 8B 4C 24 ? 48 85 C9 74 ? BA ? ? ? ? E8 ? ? ? ? 45 33 F6");
+	static ItemDescriptor_ctorT ItemDescriptor_ctor = (ItemDescriptor_ctorT)FindSignature("48 89 5C 24 ? 55 56 57 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B F2 48 8B F9 48 89 4C 24 ? 0F B6 5A");
 	ItemDescriptor_ctor(this, item);
 }
 
@@ -120,6 +120,6 @@ ItemDescriptor::ItemDescriptor(int id, int16_t itemData) {
 
 Item *Item::setAllowOffhand(bool allow) {
 	using setAllowOffhand_t = Item*(__fastcall *)(Item*, bool);
-	setAllowOffhand_t setAllowOffhand = reinterpret_cast<setAllowOffhand_t>(FindSignature("80 89 ? ? ? ? ? 48 8B C1 C3 CC CC CC CC CC 4C 8B DC"));
+	setAllowOffhand_t setAllowOffhand = reinterpret_cast<setAllowOffhand_t>(FindSignature("80 89 ? ? ? ? ? 48 8B C1 C3 CC CC CC CC CC 40 53"));
 	return setAllowOffhand(this, allow);
 }

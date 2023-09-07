@@ -20,7 +20,7 @@ void GameMode::survivalDestroyBlockHack(Vec3i const &block, int face, Vec3 const
 	action.action = 18;
 	action.blockPosition = Vec3i(block.x, block.y, block.z);
 	action.face = face;
-	action.entityRuntimeId = p->entityRuntimeId;
+	action.entityRuntimeId = p->getRuntimeIDComponent()->runtimeID;
 	Game.getClientInstance()->loopbackPacketSender->sendToServer(&action);
 }
 

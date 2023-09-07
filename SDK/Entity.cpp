@@ -7,14 +7,14 @@ InventoryTransactionManager *Entity::getTransactionManager() {
 	if (offset == 0) {
 		offset = *reinterpret_cast<int*>(FindSignature("49 8D 8E ? ? ? ? E8 ? ? ? ? 90 48 8D 8D ? ? ? ? E8 ? ? ? ? 49 8B 06 48 8B 95") + 3);
 	}*/
-	return reinterpret_cast<InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + 0x1628);
+	return reinterpret_cast<InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + 0xEC8);
 }
 PlayerInventoryProxy *Player::getSupplies() {
 	/*static unsigned int offset = 0;
 	if (offset == 0) {
 		offset = *reinterpret_cast<int *>(FindSignature("48 8B 51 ?? 4C 8B 82 ?? ?? ?? ?? 48 8B B2 ?? ?? ?? ?? 41 80 B8") + 7);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
 	}*/
-	return *reinterpret_cast<PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + 0xDB8);
+	return *reinterpret_cast<PlayerInventoryProxy **>(reinterpret_cast<__int64>(this) + 0x848);
 }
 int Player::getDeviceID() {
 	/*static unsigned int offset = 0;
@@ -45,7 +45,7 @@ float Entity::getBlocksPerSecond() {
 
 void Entity::lerpTo(Vec3 const &pos, Vec2 const &rot, int steps) { //lerpTo was removed from the Player vtable so this is how we are going to use it from now on
 	using lerpTo = void(__fastcall *)(Entity *, Vec3 const &, Vec2 const &, int);
-	static lerpTo lerp = reinterpret_cast<lerpTo>(FindSignature("48 89 5C ? ? 48 89 6C ? ? 48 89 74 ? ? 57 48 83 EC ? 48 8B 41 ? 48 8B F9 48 8B DA 41 8B E9"));
+	static lerpTo lerp = reinterpret_cast<lerpTo>(FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 41 ? 48 8B F9 48 8B DA"));
 	lerp(this, pos, rot, steps);
 }
 

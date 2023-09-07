@@ -10,6 +10,7 @@
 #include "Components.h"
 #include "Dimension.h"
 #include "EntityList.h"
+#include "GameType.h"
 #include "Inventory.h"
 #include "InventoryTransaction.h"
 #include "PlayerMovementProxy.h"
@@ -18,7 +19,7 @@
 class GameMode;
 
 class Level {
-	char pad_0x0[0xAC0];
+	char pad_0x0[0xBF0];
 public:
 	int rayHitType;
 	int blockSide;
@@ -28,25 +29,25 @@ public:
 	Entity *entityPtr2;
 	uint64_t GamingEntityFinder;
 
-	BUILD_ACCESS(this, int, levelTicks, 0x620);
+	BUILD_ACCESS(this, int, levelTicks, 0x8A0);
 
 public:
 	bool hasEntity();     // to not go trough the entity list twice
 	Entity *getEntity();  // returns the entity that the player is looking at
 	int getLevelTicks() {
 		// return levelTicks;
-		return *reinterpret_cast<int *>(reinterpret_cast<__int64>(this) + 0x620);
+		return *reinterpret_cast<int *>(reinterpret_cast<__int64>(this) + 0x8A0);
 	}
 
 	class LoopbackPacketSender *getLoopbackPacketSender() {
-		return *reinterpret_cast<class LoopbackPacketSender **>(reinterpret_cast<__int64>(this) + 0xA58);
+		return *reinterpret_cast<class LoopbackPacketSender **>(reinterpret_cast<__int64>(this) + 0xBD8);
 	}
 
 	void playSound(std::string sound, Vec3 const &position, float volume, float pitch) {
 		static uintptr_t sig = 0x0;
 
 		if (sig == 0)
-			sig = FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 81 ? ? ? ? 33 FF 48 2B 81 ? ? ? ? 49 8B F0 48 C1 F8 ? 48 8B EA");
+			sig = FindSignature("48 89 5C ? ? 48 89 6C ? ? 48 89 74 ? ? 57 48 83 EC ? 48 8B 41 ? 33 FF");
 
 		using playSound_t = void(__fastcall *)(Level *, TextHolder *, Vec3 const &, float, float);
 		static playSound_t func = reinterpret_cast<playSound_t>(sig);
@@ -58,7 +59,7 @@ public:
 		static uintptr_t sig = 0x0;
 
 		if (sig == 0)
-			sig = FindSignature("48 89 5C 24 ? 56 57 41 56 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B F2 4C 8B F1 48 89 54 24 ? 33 C9");
+			sig = FindSignature("40 53 48 83 EC ? 48 81 C1 ? ? ? ? 48 8B DA E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC 48 8B 8");
 
 		using entityList_t = std::int64_t *(__fastcall *)(Level *, void *);
 		static entityList_t func = reinterpret_cast<entityList_t>(sig);
@@ -91,30 +92,18 @@ struct EntityLocation {
 	Vec3 velocity;
 };
 
-enum class GameType : int {
-	Survival = 0,
-	Creative = 1,
-	Adventure = 2,
-	// SurvivalViewer = 3,
-	// CreativeViewer = 4,
-	Default = 5,
-	Spectator = 6
-};
-
 #pragma pack(push, 4)
 class Entity {
 public:
 	BUILD_ACCESS(this, __int64 **, entityRegistryBase, 0x8);
 	BUILD_ACCESS(this, uint32_t, entityId, 0x10);
-	BUILD_ACCESS(this, int, ticksAlive, 0x24C);
-	BUILD_ACCESS(this, int, damageTime, 0x250);
-	BUILD_ACCESS(this, Dimension *, dimension, 0x300);
-	BUILD_ACCESS(this, Level *, level, 0x310);
-	BUILD_ACCESS(this, EntityLocation *, entityLocation, 0x350);
-	BUILD_ACCESS(this, AABB*, aabb, 0x358);
-	BUILD_ACCESS(this, int64_t, entityRuntimeId, 0x418);
+	BUILD_ACCESS(this, int, damageTime, 0x188);
+	BUILD_ACCESS(this, int, ticksAlive, 0x200);
+	BUILD_ACCESS(this, Dimension *, dimension, 0x250);
+	BUILD_ACCESS(this, Level *, level, 0x260);
+	BUILD_ACCESS(this, EntityLocation *, entityLocation, 0x2A0);
+	BUILD_ACCESS(this, AABB*, aabb, 0x2A8);
 	BUILD_ACCESS(this, int, deviceIdentifier, 0x848);
-	BUILD_ACCESS(this, GameType, gamemode, 0x219C);
 
 	virtual int getStatusFlag(ActorFlags);
 	virtual void setStatusFlag(ActorFlags, bool);
@@ -131,21 +120,19 @@ public:
 	virtual void reloadComponents(__int64, __int64 const &);
 	virtual void _serverInitItemStackIds(void);
 	virtual void _doInitialMove(void);
-	virtual bool hasComponent(HashedString const &);
+	virtual void hasComponent(HashedString const &);
 
 private:
 	virtual void Destructor();
 
 public:
 	virtual void resetUserPos(bool);
-	virtual int getDimensionId(void);
 	virtual int getOwnerEntityType(void);
 	virtual void remove(void);
-	virtual void setPos(Vec3 const &);
 	virtual bool isRuntimePredictedMovementEnabled(void);
 	virtual int getPredictedMovementValues(void);
-	virtual Vec3* getPos(void);
-	virtual Vec3* getPosOld(void);
+	virtual Vec3 *getPos(void);
+	virtual Vec3 *getPosOld(void);
 	virtual float getPosExtrapolated(float);
 	virtual float getAttachPos(__int64, float);
 	virtual int getFiringPos(void);
@@ -177,7 +164,7 @@ public:
 	virtual void startRiding(Entity &);
 	virtual void addPassenger(Entity &);
 	virtual void flagPassengerToRemove(Entity &);
-	virtual int getExitTip(TextHolder const &, __int64);
+	virtual int getExitTip(std::string const &, __int64, __int64);
 	virtual int getEntityLocNameString(void);
 	virtual void intersects(Vec3 const &, Vec3 const &);
 	virtual bool isInWall(void);
@@ -185,17 +172,15 @@ public:
 	virtual bool canShowNameTag(void);
 	virtual void canExistInPeaceful(void);
 	virtual void setNameTagVisible(bool);
-	virtual TextHolder* getNameTag(void);
+	virtual TextHolder *getNameTag(void);
 	virtual int getNameTagAsHash(void);
-	virtual int getFormattedNameTag(void);
+	virtual TextHolder *getFormattedNameTag(void);
 	virtual void filterFormattedNameTag(__int64 const &);
-	virtual void setNameTag(TextHolder const &);
+	virtual void setNameTag(std::string const &);
 	virtual int getAlwaysShowNameTag(void);
-	virtual void setScoreTag(TextHolder const &);
+	virtual void setScoreTag(std::string const &);
 	virtual int getScoreTag(void);
 	virtual bool isInWater(void);
-	virtual bool hasEnteredWater(void);
-	virtual bool isInLava(BlockSource const &);
 	virtual bool isUnderLiquid(__int64);
 	virtual bool isOverWater(void);
 	virtual void setBlockMovementSlowdownMultiplier(BlockLegacy const &, Vec3 const &);
@@ -204,12 +189,12 @@ public:
 	virtual int getShadowHeightOffs(void);
 	virtual int getShadowRadius(void);
 	virtual float getHeadLookVector(float);
-	virtual bool canSeeInvisible(void);
+	virtual void canSeeInvisible(void);
 	virtual bool canSee(Vec3 const &);
 	virtual bool canSee(Entity const &);
 	virtual void canInteractWithOtherEntitiesInGame(void);
 	virtual bool isSkyLit(float);
-	virtual float getBrightness(float);
+	virtual float getBrightness(float, __int64 const &);
 	virtual void interactPreventDefault(void);
 	virtual void playerTouch(Player &);
 	virtual void onAboveBubbleColumn(bool);
@@ -251,7 +236,6 @@ public:
 	virtual void setStanding(bool);
 	virtual void canPowerJump(void);
 	virtual void setCanPowerJump(bool);
-	virtual bool isJumping(void);
 	virtual bool isEnchanted(void);
 	virtual void vehicleLanded(Vec3 const &, Vec3 const &);
 	virtual void shouldRender(void);
@@ -269,29 +253,27 @@ public:
 	virtual int getEntityRendererId(void);
 	virtual void spawnAtLocation(int, int);
 	virtual void spawnAtLocation(int, int, float);
-	virtual void spawnAtLocation(Block const &, int);
-	virtual void spawnAtLocation(Block const &, int, float);
 	virtual void spawnAtLocation(ItemStack const &, float);
 	virtual void despawn(void);
 	virtual void killed(Entity &);
 	virtual void awardKillScore(Entity &, int);
 	virtual void setArmor(int, ItemStack const &);
-	virtual ItemStack* getArmor(int);
+	virtual ItemStack *getArmor(int);
 	virtual int getAllArmor(void);
 	virtual int getArmorMaterialTypeInSlot(int);
 	virtual int getArmorMaterialTextureTypeInSlot(int);
 	virtual int getArmorColorInSlot(int, int);
 	virtual int getEquippedSlot(int);
-	virtual void setEquippedSlot(int, ItemStack *);
-	virtual void setCarriedItem(ItemStack *);
+	virtual void setEquippedSlot(int, ItemStack const &);
+	virtual void setCarriedItem(ItemStack const *);
 	virtual int getCarriedItem(void);
-	virtual void setOffhandSlot(ItemStack *);
-	virtual ItemStack* getEquippedTotem(void);
+	virtual void setOffhandSlot(ItemStack const *);
+	virtual ItemStack *getEquippedTotem(void);
 	virtual void consumeTotem(void);
 	virtual void save(CompoundTag *);
-	virtual void saveWithoutId(CompoundTag *);
+	virtual void saveWithoutId(CompoundTag &);
 	virtual void load(CompoundTag const &, __int64 &);
-	virtual void loadLinks(CompoundTag const &, __int64 &, __int64 &);
+	virtual void loadLinks(CompoundTag const &, std::vector<__int64> &, __int64 &);
 	virtual int getEntityTypeId(void);
 	virtual void queryEntityRenderer(void);
 	virtual int getSourceUniqueID(void);
@@ -303,7 +285,7 @@ public:
 	virtual int getPortalCooldown(void);
 	virtual int getPortalWaitTime(void);
 	virtual void canChangeDimensionsUsingPortal(void);
-	virtual void changeDimension(int);
+	virtual void changeDimension(Dimension *, int);
 	virtual void changeDimension(__int64 const &);
 	virtual int getControllingPlayer(void);
 	virtual void checkFallDamage(float, bool);
@@ -324,7 +306,7 @@ public:
 	virtual void stopRiding(bool, bool, bool);
 	virtual void startSwimming(void);
 	virtual void stopSwimming(void);
-	virtual void buildDebugInfo(TextHolder &);
+	virtual void buildDebugInfo(std::string &);
 	virtual int getCommandPermissionLevel(void);
 	virtual bool isClientSide(void);
 	virtual class AttributeInstance *getMutableAttribute(class Attribute *Attribute);
@@ -332,27 +314,21 @@ public:
 	virtual int getDeathTime(void);
 	virtual void heal(int);
 	virtual bool isInvertedHealAndHarm(void);
-	virtual void canBeAffected(uint32_t);
+	virtual void canBeAffected(int);
 	virtual void canBeAffectedByArrow(MobEffectInstance const &);
 	virtual void onEffectAdded(MobEffectInstance &);
 	virtual void onEffectUpdated(MobEffectInstance &);
 	virtual void onEffectRemoved(MobEffectInstance &);
 	virtual void canObstructSpawningAndBlockPlacement(void);
-	virtual int getAnimationComponent(void);
+	virtual class AnimationComponent *getAnimationComponent(void);
 	virtual void openContainerComponent(Player &);
 	virtual void swing(void);
 	virtual void useItem(ItemStack &, __int64, bool);
-	virtual void hasOutputSignal(uint8_t);
+	virtual void hasOutputSignal(char);
 	virtual int getOutputSignal(void);
-	virtual int getDebugText(std::vector<TextHolder> &);
+	virtual int getDebugText(std::vector<std::string> &);
 	virtual int getMapDecorationRotation(void);
 	virtual int getPassengerYRotation(Entity const &);
-	virtual bool isWorldBuilder(void);
-	virtual bool isCreative(void);
-	virtual bool isAdventure(void);
-	virtual bool isSurvival(void);
-	virtual bool isSpectator(void);
-	virtual bool isAttackableGamemode(void);
 	virtual void add(ItemStack &);
 	virtual void drop(ItemStack const &, bool);
 	virtual int getInteraction(Player &, __int64 &, Vec3 const &);
@@ -376,9 +352,8 @@ public:
 	virtual void applySnapshot(__int64 const &, __int64 const &);
 	virtual float getNextStep(float);
 	virtual int getLootTable(void);
-	virtual void interpolatorTick(void);
 	virtual void onPush(Entity &);
-	virtual int getLastDeathPos(void);
+	virtual Vec3i getLastDeathPos(void);
 	virtual int getLastDeathDimension(void);
 	virtual void hasDiedBefore(void);
 	virtual void doWaterSplashEffect(void);
@@ -409,11 +384,10 @@ public:
 	virtual int getDeathSound(void);
 	virtual __int64 getSpeed(void);
 	virtual void setSpeed(float);
-	virtual int getSprintSpeedIncrease(void);
 	virtual void hurtEffects(__int64 const &, float, bool, bool);
 	virtual int getMeleeWeaponDamageBonus(Entity);
 	virtual int getMeleeKnockbackBonus(void);
-	virtual void travel(float, float, float);
+	virtual void travel(float, float, float, bool);
 	virtual void applyFinalFriction(float, bool);
 	virtual void aiStep(void);
 	virtual void aiStep(__int64 &);
@@ -440,7 +414,7 @@ public:
 	virtual int getArmorValue(void);
 	virtual int getArmorCoverPercentage(void);
 	virtual int getToughnessValue(void);
-	virtual void hurtints(__int64 const &, int, std::bitset<4ul>);
+	virtual void hurtArmorSlots(__int64 const &, int, std::bitset<4ul>);
 	virtual void setDamagedArmor(int, ItemStack const &);
 	virtual void sendArmorDamage(std::bitset<4ul>);
 	virtual void sendArmor(std::bitset<4ul>);
@@ -454,7 +428,7 @@ public:
 	virtual void dropEquipmentOnDeath(__int64 const &, int);
 	virtual void dropEquipmentOnDeath(void);
 	virtual void clearVanishEnchantedItemsOnDeath(void);
-	virtual void sendInventory(bool);
+	virtual void sendInventory(bool shouldSelectSlot);
 	virtual float getDamageAfterEnchantReduction(__int64 const &, float);
 	virtual float getDamageAfterArmorReduction(__int64 const &, float);
 	virtual float getDamageAfterResistanceEffect(__int64 const &, float);
@@ -466,15 +440,13 @@ public:
 	virtual int getAttackTime(void);
 	virtual void _getWalkTargetValue(Vec3i const &);
 	virtual void canExistWhenDisallowEntity(void);
-	virtual void useNewAi(void);
 	virtual void ascendLadder(void);
 	virtual void ascendBlockByJumping(void);
 	virtual void descendBlockByCrouching(void);
 	virtual void dropContainer(void);
 	virtual void initBodyControl(void);
-	virtual void jumpFromGround(void);
-	virtual void jumpFromGround(__int64 &);
-	virtual void updateAi(void);
+	virtual void jumpFromGround(BlockSource const &);
+	virtual void jumpFromGround(PlayerMovementProxy &, BlockSource const &);
 	virtual void newServerAiStep(void);
 	virtual void _serverAiEntityStep(void);
 	virtual void dropBags(void);
@@ -492,7 +464,7 @@ public:
 
 	__int64 *getUniqueId() {
 		using getUniqueId_t = __int64*(__thiscall *)(Entity*);
-		static auto getUniqueIdFunc = reinterpret_cast<getUniqueId_t>(FindSignature("40 53 48 83 EC 20 48 8D 99 ? ? ? ? 48 83 3B"));
+		static auto getUniqueIdFunc = reinterpret_cast<getUniqueId_t>(FindSignature("40 53 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B 51 ? 48 8B D9 8B 41"));
 		return getUniqueIdFunc(this);
 	}
 
@@ -510,7 +482,7 @@ public:
 	float getBlocksPerSecond();
 
 	int getTicksUsingItem() {
-		return *reinterpret_cast<int *>(this + 0x1238);
+		return *reinterpret_cast<int *>(this + 0xFF8);
 	}
 
 	bool isSneaking() {
@@ -530,11 +502,11 @@ public:
 	}
 
 	void SetFieldOfView(float num) {
-		*(float *)((uintptr_t)(this) + 0x1458) = num;
+		*(float *)((uintptr_t)(this) + 0x1048) = num;
 	}
 
 	float GetFieldOfView() {
-		return *reinterpret_cast<float *>(this + 0x1458);
+		return *reinterpret_cast<float *>(this + 0x1048);
 	}
 
 	class Level *getLevel() {
@@ -562,8 +534,16 @@ public:
 		return pos;
 	}
 
+	void setPos(Vec3 vec) {
+		getMovementProxy()->setPos(vec);
+	}
+
 	BlockSource* getRegion() {
 		return getBlockSourceComponent()->region;
+	}
+
+	void jumpFromGround() {
+		this->jumpFromGround(*getRegion());
 	}
 
 	void lerpTo(Vec3 const &pos, Vec2 const &rot, int steps);
@@ -613,6 +593,20 @@ public:
 	BlockSourceComponent *getBlockSourceComponent() {
 		using getBlockSourceComponent = BlockSourceComponent *(__cdecl *)(__int64 *, uint32_t *);
 		static auto func = reinterpret_cast<getBlockSourceComponent>(FindSignature("40 53 48 83 EC ? 48 8B DA BA 32 47 C1 FD"));
+		uint32_t id = this->entityId;
+		return func(*this->entityRegistryBase, &id);
+	}
+
+	RuntimeIDComponent *getRuntimeIDComponent() {
+		using getRuntimeIDComponent = RuntimeIDComponent *(__cdecl *)(__int64 *, uint32_t *);
+		static auto func = reinterpret_cast<getRuntimeIDComponent>(FindSignature("40 53 48 83 EC ? 48 8B DA BA 14 14 A1 3C"));
+		uint32_t id = this->entityId;
+		return func(*this->entityRegistryBase, &id);
+	}
+
+	ActorGameTypeComponent *getActorGameTypeComponent() {
+		using getActorGameTypeComponent = ActorGameTypeComponent *(__cdecl *)(__int64 *, uint32_t *);
+		static auto func = reinterpret_cast<getActorGameTypeComponent>(FindSignature("40 53 48 83 EC ? 48 8B DA BA DE AB CB AF"));
 		uint32_t id = this->entityId;
 		return func(*this->entityRegistryBase, &id);
 	}
@@ -725,13 +719,17 @@ public:
 	virtual void resendAllChunks(void);
 	virtual void _fireWillChangeDimension(void);
 	virtual void _fireDimensionChanged(void);
-	virtual void changeDimensionWithCredits(int);
+	virtual void changeDimensionWithCredits(Dimension, int);
 	virtual void tickWorld(__int64 const &);
-	virtual void frameUpdate(__int64 &);
+
+private:
+	virtual void TryroFunc354();
+
+public:
 	virtual int getTickingOffsets(void);
 	virtual void moveView(void);
-	virtual void moveSpawnView(Vec3 const &, int);
-	virtual void setName(TextHolder const &);
+	virtual void moveSpawnView(Vec3 const &, Dimension, int);
+	virtual void setName(std::string const &);
 	virtual int getTravelledMethod(void);
 	virtual void checkMovementStats(Vec3 const &);
 	virtual int getCurrentStructureFeature(void);
@@ -748,21 +746,21 @@ public:
 	virtual void openTrading(uint64_t const &, bool);
 	virtual bool canOpenContainerScreen(void);
 	virtual void openChalkboard(__int64 &, bool);
-	virtual void openNpcInteractScreen(__int64);
+	virtual void openNpcInteractScreen(std::shared_ptr<__int64>);
 	virtual void openInventory(void);
-	virtual void displayChatMessage(TextHolder const &, TextHolder const &);
+	virtual void displayChatMessage(std::string const &, std::string const &);
 	virtual void displayClientMessage(TextHolder *);
-	virtual void displayTextObjectMessage(__int64 const &, TextHolder const &, TextHolder const &);
-	virtual void displayTextObjectWhisperMessage(__int64 const &, TextHolder const &, TextHolder const &);
-	virtual void displayTextObjectWhisperMessage(TextHolder const &, TextHolder const &, TextHolder const &);
-	virtual void displayWhisperMessage(TextHolder const &, TextHolder const &, TextHolder const &, TextHolder const &);
+	virtual void displayTextObjectMessage(__int64 const &, std::string const &, std::string const &);
+	virtual void displayTextObjectWhisperMessage(__int64 const &, std::string const &, std::string const &);
+	virtual void displayTextObjectWhisperMessage(std::string const &, std::string const &, std::string const &);
+	virtual void displayWhisperMessage(std::string const &, std::string const &, std::string const &, std::string const &);
 	virtual void startSleepInBed(Vec3i const &);
 	virtual void stopSleepInBed(bool, bool);
 	virtual void canStartSleepInBed(void);
 	virtual int getSleepTimer(void);
 	virtual int getPreviousTickSleepTimer(void);
-	virtual void openSign(Vec3i const &);
-	virtual void playEmote(TextHolder const &);
+	virtual void openSign(Vec3i const &, bool);
+	virtual void playEmote(std::string const &, bool);
 	virtual bool isHostingPlayer(void);
 	virtual bool isLoading(void);
 	virtual bool isPlayerInitialized(void);
@@ -772,45 +770,58 @@ public:
 	virtual void setPlayerGameType(GameType);
 	virtual void initHUDContainerManager(void);
 	virtual void _crit(Entity &);
-	virtual int getEventing(void);
+	virtual __int64 *getEventing(void);
 	virtual int getUserId(void);
 	virtual void sendEventPacket(__int64 &);
 	virtual void addExperience(int);
 	virtual void addLevels(int);
-	virtual void setContainerData(__int64 &, int, int);
-	virtual void slotChanged(__int64 &, __int64 &, int, ItemStack const &, ItemStack const &, bool);
+
+private:
+	virtual void TryroFunc404();
+	virtual void TryroFunc405();
+
+public:
 	virtual void inventoryChanged(__int64 &, int, ItemStack const &, ItemStack const &, bool);
-	virtual void refreshContainer(__int64 &);
+
+private:
+	virtual void TryroFunc407();
+
+public:
 	virtual void deleteContainerManager(void);
-	virtual void setFieldOfViewModifier(float);
 	virtual bool isEntityRelevant(Entity const &);
-	virtual bool isTeacher(void);
+
+private:
+	virtual void TryroFunc410();
+
+public:
 	virtual void onSuspension(void);
 	virtual void onLinkedSlotsChanged(void);
 	virtual void startCooldown(Item const *, bool);
 	virtual int getItemCooldownLeft(HashedString const &);
-	virtual int getItemCooldownLeft(uint64_t);
+	virtual int getItemCooldownLeft(long);
 	virtual int getMaxItemCooldownLeft(void);
 	virtual bool isItemOnCooldown(HashedString const &);
-	virtual void sendInventoryTransaction(InventoryTransaction const &);
-	virtual void sendComplexInventoryTransaction(__int64);
-	virtual void sendNetworkPacket(Packet &);
-	virtual int getPlayerEventCoordinator(void);
-	virtual void tryGetMoveInputHandler(void);
-	virtual int getInputMode(void);
-	virtual int getPlayMode(void);
+
+private:
+	virtual void TryroFunc418();
+	virtual void TryroFunc419();
+
+public:
+	virtual void sendNetworkPacket(class Packet &);
+
+private:
+	virtual void TryroFunc421();
+
+public:
 	virtual void reportMovementTelemetry(__int64);
 	virtual bool isSimulated(void);
 	virtual int getXuid(void);
 	virtual int getMovementSettings(void);
 	virtual void addSavedChunk(__int64 const &);
+	virtual int getMaxChunkBuildRadius(void);
 	virtual void onMovePlayerPacketNormal(Vec3 const &, Vec2 const &, float);
 	virtual void _createChunkSource(__int64 &);
 	virtual void setAbilities(__int64 const &);
-	virtual int getEditorPlayer(void);
-	virtual void destroyEditorPlayer(void);
-	virtual void _getSpawnChunkLimit(void);
-	virtual void _updateChunkPublisherView(Vec3 const &, float);
 };
 
 class ServerPlayer : public Player {

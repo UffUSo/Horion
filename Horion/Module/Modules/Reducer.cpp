@@ -12,11 +12,15 @@ Reducer::~Reducer() {
 
 const char* Reducer::getModuleName() {
 	if (this->isEnabled()) {
-		std::string mod = std::string("Reducer (") + std::string(this->mode.GetSelectedEntry().GetName()) + std::string(")");
-
-		return mod.c_str();
+		static char modName[64];
+		snprintf(modName, 64, "Reducer [%s]", this->mode.GetSelectedEntry().GetName().c_str());
+		return modName;
 	}
 
+	return "Reducer";
+}
+
+const char* Reducer::getRawModuleName() {
 	return "Reducer";
 }
 
@@ -37,7 +41,8 @@ void Reducer::onTick(GameMode* gm) {
 
 	switch (this->mode.selected) {
 	case 0:
-		if (player->damageTime > 0 && player->isOnGround()) player->jumpFromGround();
+		if (player->damageTime > 0 && player->isOnGround())
+			player->jumpFromGround();
 		break;
 	case 1:
 		if (player->damageTime > 0 && !player->isSneaking()) {
@@ -48,17 +53,14 @@ void Reducer::onTick(GameMode* gm) {
 	case 2:
 		ticks++;
 
-		if (player->damageTime == 1) {
+		if (player->damageTime == 1)
 			this->hitCount++;
-		}
 
-		if (player->damageTime > 0) {
+		if (player->damageTime > 0)
 			this->ticks = 0;
-		}
 
-		if (this->ticks >= 20) {
+		if (this->ticks >= 20)
 			this->hitCount = 0;
-		}
 
 		if (player->damageTime > 0 && this->hitCount == 2 && player->isOnGround()) {
 			player->jumpFromGround();

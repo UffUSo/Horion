@@ -2,6 +2,7 @@
 
 #include "../Utils/HMath.h"
 
+#include "GameType.h"
 #include "PlayerMovementProxy.h"
 
 struct MobBodyRotationComponent {
@@ -38,4 +39,8 @@ struct ActorMovementProxyComponent {
 
 struct BlockSourceComponent {
 	BlockSource* region;
+};
+
+struct ActorGameTypeComponent {
+	enum GameType gameType;
 };

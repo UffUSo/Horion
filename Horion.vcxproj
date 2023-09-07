@@ -535,6 +535,7 @@
     <ClInclude Include="SDK\EntityList.h" />
     <ClInclude Include="SDK\GameMode.h" />
     <ClInclude Include="SDK\GameSettingsInput.h" />
+    <ClInclude Include="SDK\GameType.h" />
     <ClInclude Include="SDK\HIDController.h" />
     <ClInclude Include="SDK\Inventory.h" />
     <ClInclude Include="SDK\InventoryTransaction.h" />

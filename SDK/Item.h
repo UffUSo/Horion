@@ -43,26 +43,26 @@ class ItemDescriptor;
 
 class Item {
 private:
-	char pad_0x8[0x98];  // 0x8
+	char pad_0x8[0x90];  // 0x8
 public:
-	int16_t maxStackSize;  // 0xA0
-	int16_t itemId;        // 0xA2
+	int16_t maxStackSize;  // 0x90
+	int16_t itemId;        // 0x92
 private:
-	char pad_0xA4[0x4];  // 0xA4
+	char pad_0x94[0x4];  // 0x94
 public:
-	TextHolder rawName;  // 0xA8
+	TextHolder rawName;  // 0x98
 private:
-	char pad_0xC8[0x8];  // 0xC8
+	char pad_0xB8[0x8];  // 0xB8
 public:
-	TextHolder name;  // 0xD0
+	TextHolder name;  // 0xC0
 private:
-	char pad_0xF0[0x30];  // 0xF0
+	char pad_0xE0[0x30];  // 0xE0
 public:
-	TextHolder isFrom;  // 0x120
+	TextHolder isFrom;  // 0x110
 private:
-	char pad_0x140[0xC];  // 0x140
+	char pad_0x130[0xC];  // 0x130
 public:
-	int16_t duration;  // 0x14C
+	int16_t duration;  // 0x13C
 
 private:
 	virtual void Destructor();
@@ -248,7 +248,7 @@ public:
 
 class ItemDescriptor {
 private:
-	char pad_0x0[0x98];  //0x0000
+	char pad_0x0[0x60];  //0x0000
 public:
 	ItemDescriptor() {
 		memset(this, 0x0, sizeof(ItemDescriptor));

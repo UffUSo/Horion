@@ -146,7 +146,7 @@ void Fly::onDisable() {
 
 	switch (mode.selected) {
 	case 0:
-		if (Game.getLocalPlayer()->gamemode != GameType::Creative)
+		if (Game.getLocalPlayer()->getActorGameTypeComponent()->gameType != GameType::Creative)
 			Game.getLocalPlayer()->setStatusFlag(CAN_FLY, false);
 		break;
 	case 1:

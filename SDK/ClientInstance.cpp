@@ -49,7 +49,7 @@ mce::MaterialPtr *mce::MaterialPtr::createMaterial(HashedString materialName) {
 
 	if (materialCreator == nullptr) {
 		// Sig returns 6 addresses, all of them point to the same offset
-		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 8B 40 ? FF 15 ? ? ? ? 48 8B F8 48 8B 50 ? 48 85 D2 0F 84 ? ? ? ? 8B 42 08 85 C0 0F 84 ? ? ? ? 0F 1F 44");
+		uintptr_t sigOffset = FindSignature("48 8B 05 ? ? ? ? 48 8D 55 ? 48 8D 0D ? ? ? ? 48 8B 40 ? FF 15 ? ? ? ? 48 8B F8");
 		int offset = *reinterpret_cast<int *>(sigOffset + 3);
 		materialCreator = reinterpret_cast<__int64 *>(sigOffset + offset + 7);
 	}
