@@ -59,7 +59,7 @@ public:
 		static uintptr_t sig = 0x0;
 
 		if (sig == 0)
-			sig = FindSignature("40 53 48 83 EC ? 48 81 C1 ? ? ? ? 48 8B DA E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC 48 8B 8");
+			sig = FindSignature("40 53 48 83 EC ? 48 81 C1 ? ? ? ? 48 8B DA E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC 48 8B 81");
 
 		using entityList_t = std::int64_t *(__fastcall *)(Level *, void *);
 		static entityList_t func = reinterpret_cast<entityList_t>(sig);
