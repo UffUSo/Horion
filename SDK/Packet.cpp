@@ -8,7 +8,7 @@ TextHolder* Packet::getName() {
 LevelSoundEventPacket::LevelSoundEventPacket() {
 	static uintptr_t** LevelSoundEventPacketVtable = 0x0;
 	if (LevelSoundEventPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 45 ? 44 89 7D ? F2 0F 10");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 89 51 30 F2");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		LevelSoundEventPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -23,7 +23,7 @@ LevelSoundEventPacket::LevelSoundEventPacket() {
 PlayerAuthInputPacket::PlayerAuthInputPacket() {
 	static uintptr_t** PlayerAuthInputPacketVtable = 0x0;
 	if (PlayerAuthInputPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 8B D9 48 89 01 48 81 C1 ? ? ? ? E8 ? ? ? ? 48 8B BB");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? ? ? C0 ? ? 00 C7 40 08 ? ? ? ? C7 40 0C ? ? ? ? 48 8D 05 ? ? ? ? 48 89 02 33 C0 48 89 42 ? 48 89 4A ? 33 C9");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		PlayerAuthInputPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -37,7 +37,7 @@ PlayerAuthInputPacket::PlayerAuthInputPacket() {
 PlayerAuthInputPacket::PlayerAuthInputPacket(Vec3 pos, float pitch, float yaw, float yawUnused) {
 	static uintptr_t** PlayerAuthInputPacketVtable = 0x0;
 	if (PlayerAuthInputPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 8B D9 48 89 01 48 81 C1 ? ? ? ? E8 ? ? ? ? 48 8B BB");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? ? ? C0 ? ? 00 C7 40 08 ? ? ? ? C7 40 0C ? ? ? ? 48 8D 05 ? ? ? ? 48 89 02 33 C0 48 89 42 ? 48 89 4A ? 33 C9");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		PlayerAuthInputPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -82,7 +82,7 @@ MobEquipmentPacket::MobEquipmentPacket(__int64 entityRuntimeId, ItemStack& item,
 InventoryTransactionPacket::InventoryTransactionPacket() {
 	static uintptr_t** InventoryTransactionPacketVtable = 0x0;
 	if (InventoryTransactionPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4D ? 48 8D 0D ? ? ? ? 48 89 4D ? 0F 57 C0");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4D ? 48 8D 35");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		InventoryTransactionPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -93,7 +93,7 @@ InventoryTransactionPacket::InventoryTransactionPacket() {
 	memset(this, 0, sizeof(InventoryTransactionPacket));  // Avoid overwriting vtable
 	vTable = InventoryTransactionPacketVtable;
 }
-C_TextPacket::C_TextPacket() {
+TextPacket::TextPacket() {
 	static uintptr_t** textPacketVtable = 0x0;
 	if (textPacketVtable == 0x0) {
 		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 44 24 ? 48 8D 4D ? E8 ? ? ? ? 48 8D 4D ? E8 ? ? ? ? 48 8D 4D ? E8 ? ? ? ? 48 8D 4D ? E8 ? ? ? ? 48 8D 4D ? E8 ? ? ? ? 48 8D 4D ? E8 ? ? ? ? 48 8B 4D");
@@ -104,15 +104,15 @@ C_TextPacket::C_TextPacket() {
 			__debugbreak();
 #endif
 	}
-	memset(this, 0, sizeof(C_TextPacket));  // Avoid overwriting vtable
+	memset(this, 0, sizeof(TextPacket));  // Avoid overwriting vtable
 	vTable = textPacketVtable;
 
 	messageType = 1;  // TYPE_CHAT
 }
-C_MovePlayerPacket::C_MovePlayerPacket() {
+MovePlayerPacket::MovePlayerPacket() {
 	static uintptr_t** movePlayerPacketVtable = 0x0;
 	if (movePlayerPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 48 8B 82 ? ? ? ? 48 89 41 ? F2 41 0F 10");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 42 ? 48 8B 47");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -120,13 +120,13 @@ C_MovePlayerPacket::C_MovePlayerPacket() {
 			__debugbreak();
 #endif
 	}
-	memset(this, 0, sizeof(C_MovePlayerPacket));  // Avoid overwriting vtable
+	memset(this, 0, sizeof(MovePlayerPacket));  // Avoid overwriting vtable
 	vTable = movePlayerPacketVtable;
 }
-C_MovePlayerPacket::C_MovePlayerPacket(LocalPlayer* player, Vec3 pos) {
+MovePlayerPacket::MovePlayerPacket(LocalPlayer* player, Vec3 pos) {
 	static uintptr_t** movePlayerPacketVtable = 0x0;
 	if (movePlayerPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 48 8B 82 ? ? ? ? 48 89 41 ? F2 41 0F 10");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 42 ? 48 8B 47");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		movePlayerPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -134,7 +134,7 @@ C_MovePlayerPacket::C_MovePlayerPacket(LocalPlayer* player, Vec3 pos) {
 			__debugbreak();
 #endif
 	}
-	memset(this, 0, sizeof(C_MovePlayerPacket));  // Avoid overwriting vtable
+	memset(this, 0, sizeof(MovePlayerPacket));  // Avoid overwriting vtable
 	vTable = movePlayerPacketVtable;
 	entityRuntimeID = player->getRuntimeIDComponent()->runtimeID;
 	Position = pos;
@@ -147,7 +147,7 @@ C_MovePlayerPacket::C_MovePlayerPacket(LocalPlayer* player, Vec3 pos) {
 PlayerActionPacket::PlayerActionPacket() {
 	static uintptr_t** playerActionPacketVtable = 0x0;
 	if (playerActionPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4D ? 44 8B 46");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4C ? ? ? ? C0 66");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		playerActionPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -159,10 +159,10 @@ PlayerActionPacket::PlayerActionPacket() {
 	vTable = playerActionPacketVtable;
 }
 
-C_SubChunkRequestPacket::C_SubChunkRequestPacket() {
+SubChunkRequestPacket::SubChunkRequestPacket() {
 	static uintptr_t** subChunkRequestPacketVtable = 0x0;
 	if (subChunkRequestPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 8B F9 48 89 01 8B DA 48 83 C1 50 E8 ? ? ? ? 48 8D 4F 38 E8 ? ? ? ? 48 8D 05 ? ? ? ? 48 89 07");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 4C ? ? ? ? C0 66");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		subChunkRequestPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -170,14 +170,14 @@ C_SubChunkRequestPacket::C_SubChunkRequestPacket() {
 			__debugbreak();
 #endif
 	}
-	memset(this, 0, sizeof(C_SubChunkRequestPacket));  // Avoid overwriting vtable
+	memset(this, 0, sizeof(SubChunkRequestPacket));  // Avoid overwriting vtable
 	vTable = subChunkRequestPacketVtable;
 }
 
-C_EmotePacket::C_EmotePacket() {
+EmotePacket::EmotePacket() {
 	static uintptr_t** emotePacketVtable = 0x0;
 	if (emotePacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 44 24 ? 48 89 4C 24 ? 33 C0");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 85 ? ? ? ? 48 89 8D ? ? ? ? 4C 89 AD");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		emotePacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -185,14 +185,14 @@ C_EmotePacket::C_EmotePacket() {
 			__debugbreak();
 #endif
 	}
-	memset(this, 0, sizeof(C_EmotePacket));  // Avoid overwriting vtable
+	memset(this, 0, sizeof(EmotePacket));  // Avoid overwriting vtable
 	vTable = emotePacketVtable;
 }
 
 AnimatePacket::AnimatePacket() {
 	static uintptr_t** animatePacketVtable = 0x0;
 	if (animatePacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 1D ? ? ? ? 48 89 5D ? 48 89 45");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 44 ? ? 48 8B 43 ? 48 8B 08");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		animatePacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -207,7 +207,7 @@ AnimatePacket::AnimatePacket() {
 AnimatePacket::AnimatePacket(int action, __int64 entityRuntimeID, float rowingTime) {
 	static uintptr_t** animatePacketVtable = 0x0;
 	if (animatePacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 1D ? ? ? ? 48 89 5D ? 48 89 45");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 44 ? ? 48 8B 43 ? 48 8B 08");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		animatePacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -222,7 +222,7 @@ AnimatePacket::AnimatePacket(int action, __int64 entityRuntimeID, float rowingTi
 	this->rowingTime = rowingTime;
 }
 
-C_NPCRequestPacket::C_NPCRequestPacket() {
+NPCRequestPacket::NPCRequestPacket() {
 	static uintptr_t** npcRequestPacketVtable = 0x0;
 	if (npcRequestPacketVtable == 0x0) {
 		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 03 48 89 53 30");
@@ -233,7 +233,7 @@ C_NPCRequestPacket::C_NPCRequestPacket() {
 			__debugbreak();
 #endif
 	}
-	memset(this, 0, sizeof(C_NPCRequestPacket));  // Avoid overwriting vtable
+	memset(this, 0, sizeof(NPCRequestPacket));  // Avoid overwriting vtable
 	vTable = npcRequestPacketVtable;
 }
 
@@ -270,7 +270,7 @@ NetworkLatencyPacket::NetworkLatencyPacket() {
 CommandRequestPacket::CommandRequestPacket() {
 	static uintptr_t** commandRequestPacketVtable = 0x0;
 	if (commandRequestPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("4C 8D 3D ? ? ? ? 4C 89 7D ? 48 89 75 ? 66 0F 7F");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? ? ? 00 C7 40 08 ? ? ? ? C7 40 0C ? ? ? ? 48 8D 05 ? ? ? ? 48 89 02 33 C0 48 89 42 ? 48 89 42 ? 89 42 38 48 89 42 ? 48 89 42 ? 88 42 60 C7 42 18");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		commandRequestPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -285,7 +285,7 @@ CommandRequestPacket::CommandRequestPacket() {
 CommandRequestPacket::CommandRequestPacket(std::string cmd) {
 	static uintptr_t** commandRequestPacketVtable = 0x0;
 	if (commandRequestPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("4C 8D 3D ? ? ? ? 4C 89 7D ? 48 89 75 ? 66 0F 7F");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? ? ? 00 C7 40 08 ? ? ? ? C7 40 0C ? ? ? ? 48 8D 05 ? ? ? ? 48 89 02 33 C0 48 89 42 ? 48 89 42 ? 89 42 38 48 89 42 ? 48 89 42 ? 88 42 60 C7 42 18");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		commandRequestPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -299,7 +299,7 @@ CommandRequestPacket::CommandRequestPacket(std::string cmd) {
 	this->isExternal = 0;
 }
 
-C_InteractPacket::C_InteractPacket(/*enum InteractPacket::Action, class ActorRuntimeID, Vec3 const&*/) {
+InteractPacket::InteractPacket(/*enum InteractPacket::Action, class ActorRuntimeID, Vec3 const&*/) {
 	static uintptr_t** interactPacketVtable = 0x0;
 	if (interactPacketVtable == 0x0) {
 		uintptr_t sigOffset = FindSignature("48 8D 15 ? ? ? ? C7 40 ? ? ? ? ? 33 C9 C7 40 ? ? ? ? ? 48 89 48 28 48 89 48 30 89 48 38 88 48 40 48 89 48 48 48 89 48 50");
@@ -310,14 +310,14 @@ C_InteractPacket::C_InteractPacket(/*enum InteractPacket::Action, class ActorRun
 			__debugbreak();
 #endif
 	}
-	memset(this, 0, sizeof(C_InteractPacket));  // Avoid overwriting vtable
+	memset(this, 0, sizeof(InteractPacket));  // Avoid overwriting vtable
 	vTable = interactPacketVtable;
 }
 
 BookEditPacket::BookEditPacket() {
 	static uintptr_t** bookEditPacketVtable = 0x0;
 	if (bookEditPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 ? ? 42 30 88 41 30 8B 42 34 89 41 34 8B 42 38 89 41 38 8B 42 3C 89 41 3C 48 83 C1");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 44 ? ? C7 44 24 ? ? ? ? ? 4C 89 7C ? ? 4C 89 7D ? 48 C7 45 ? ? ? ? ? 44 88 7C ? ? 4C 89 7D ? 4C 89 7D ? 48 C7 45 ? ? ? ? ? 44 88 7D ? 4C 89 7D ? 4C 89 7D ? 48 C7 45 ? ? ? ? ? 44 88 7D ? 41 8B 46 ? 44 88 7C");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		bookEditPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 #ifdef _DEBUG
@@ -332,7 +332,7 @@ BookEditPacket::BookEditPacket() {
 DisconnectPacket::DisconnectPacket() {
 	static uintptr_t** disconnectPacketVtable = 0x0;
 	if (disconnectPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 45 ? 40 88 75 ? 48 89 75");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 45 ? 40 88 75 ? 48 89 75 ? 48 89 75 ? 48 C7 45");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		disconnectPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 #ifdef _DEBUG
@@ -347,7 +347,7 @@ DisconnectPacket::DisconnectPacket() {
 DisconnectPacket::DisconnectPacket(TextHolder reason, bool hideDisconnectScreen) {
 	static uintptr_t** disconnectPacketVtable = 0x0;
 	if (disconnectPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 45 ? 40 88 75 ? 48 89 75");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 45 ? 40 88 75 ? 48 89 75 ? 48 89 75 ? 48 C7 45");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		disconnectPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 #ifdef _DEBUG
@@ -364,7 +364,7 @@ DisconnectPacket::DisconnectPacket(TextHolder reason, bool hideDisconnectScreen)
 ResourcePacksInfoPacket::ResourcePacksInfoPacket() {
 	static uintptr_t** resourcePacksInfoPacketVtable = 0x0;
 	if (resourcePacksInfoPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? ? ? 00 C7 40 08 ? ? ? ? C7 40 0C ? ? ? ? 48 8D 05 ? ? ? ? 48 89 02 33 C0 48 89 42 ? 48 89 42 ? 89 42 38 89 42 40 48 89 42 ? 48 89 42 ? 48 89 42 ? 48 89 42");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? ? ? 00 C7 40 08 ? ? ? ? C7 40 0C ? ? ? ? 48 8D 05 ? ? ? ? 48 89 02 33 C0 48 89 42 ? 48 89 42 ? 89 42 38 89 42 40 48 89 42 ? 48 89 42 ? 48 89 42 ? 48 89 42 ? 48 89 42");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		resourcePacksInfoPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 #ifdef _DEBUG
@@ -379,7 +379,7 @@ ResourcePacksInfoPacket::ResourcePacksInfoPacket() {
 SetPlayerGameTypePacket::SetPlayerGameTypePacket() {
 	static uintptr_t** setPlayerGameTypePacketVtable = 0x0;
 	if (setPlayerGameTypePacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 44 24 ? 89 74 24 ? 48 8B 8B");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 44 ? ? 89 7C 24 ? 48 8B 8B ? ? ? ? 48 8B 01 48 8D 54 ? ? 48 8B 40 ? FF 15 ? ? ? ? 90 8B D7");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		setPlayerGameTypePacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -496,7 +496,7 @@ MobEffectPacket::MobEffectPacket(__int64 entityRuntimeId, char event, int effect
 RemoveActorPacket::RemoveActorPacket() { //Client
 	static uintptr_t** removeActorPacketVtable = 0x0;
 	if (removeActorPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("4C 8D 3D ? ? ? ? 0F 1F 40 ? 66 0F 1F ? ? ? ? ? ? 0F 57 C0");
+		uintptr_t sigOffset = FindSignature("48 8D 0D ? ? ? ? 48 89 48 ? C7 40 18 ? ? ? ? C7 40 1C ? ? ? ? 66 C7 40 ? ? ? 48 C7 40 ? ? ? ? ? EB");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		removeActorPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG
@@ -526,7 +526,7 @@ PlayerArmorDamagePacket::PlayerArmorDamagePacket() { //Client
 SetHealthPacket::SetHealthPacket() {  // Client
 	static uintptr_t** setHealthPacketVtable = 0x0;
 	if (setHealthPacketVtable == 0x0) {
-		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 85 ? ? ? ? 66 0F 6E");
+		uintptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 48 8B C1 C7 41 0C ? ? ? ? 66 C7 41 ? ? ? 89 51 30 C3");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		setHealthPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
 #ifdef _DEBUG

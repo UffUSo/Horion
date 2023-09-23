@@ -21,7 +21,7 @@ HudModule::~HudModule() {
 }
 
 const char* HudModule::getModuleName() {
-	return ("HUD");
+	return "HUD";
 }
 
 void HudModule::drawKeystroke(char key, const Vec2& pos) {

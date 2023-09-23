@@ -22,7 +22,7 @@ struct CompareTargetEnArray {
 };
 
 const char* BowAimbot::getModuleName() {
-	return ("BowAimbot");
+	return "BowAimbot";
 }
 
 void findTargets(Entity* currentEntity, bool isRegularEntitie) {
@@ -55,7 +55,7 @@ void BowAimbot::onPostRender(MinecraftUIRenderContext* renderCtx) {
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
 		Vec3 origin = Game.getClientInstance()->levelRenderer->getOrigin();  // TODO: sort list
 		Entity* entity = targetList[0];
-		Vec3 pos = entity->aabb->centerPoint();
+		Vec3 pos = entity->getAABBShapeComponent()->aabb.centerPoint();
 		if (predict) {
 			Vec3 velocity = entity->getPos()->sub(*entity->getPosOld());
 			velocity.x *= origin.dist(pos) / 2.f;
@@ -75,7 +75,7 @@ void BowAimbot::onPostRender(MinecraftUIRenderContext* renderCtx) {
 
 		if (silent) {
 			angle = Vec2(pitch, yaw);
-			C_MovePlayerPacket p(Game.getLocalPlayer(), *Game.getLocalPlayer()->getPos());
+			MovePlayerPacket p(Game.getLocalPlayer(), *Game.getLocalPlayer()->getPos());
 			p.pitch = angle.x;
 			p.yaw = angle.y;
 			p.headYaw = angle.y;
@@ -95,9 +95,9 @@ void BowAimbot::onPostRender(MinecraftUIRenderContext* renderCtx) {
 }
 
 void BowAimbot::onSendPacket(Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>() && silent) {
+	if (packet->isInstanceOf<MovePlayerPacket>() && silent) {
 		if (!targetList.empty()) {
-			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			auto* movePacket = reinterpret_cast<MovePlayerPacket*>(packet);
 			movePacket->pitch = angle.x;
 			movePacket->headYaw = angle.y;
 			movePacket->yaw = angle.y;

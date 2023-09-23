@@ -8,5 +8,5 @@ HighJump::~HighJump() {
 }
 
 const char* HighJump::getModuleName() {
-	return ("HighJump");
+	return "HighJump";
 }

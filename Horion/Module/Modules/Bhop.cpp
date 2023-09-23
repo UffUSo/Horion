@@ -10,7 +10,7 @@ Bhop::~Bhop() {
 }
 
 const char* Bhop::getModuleName() {
-	return ("Bhop");
+	return "Bhop";
 }
 
 void Bhop::onMove(MoveInputHandler* input) {

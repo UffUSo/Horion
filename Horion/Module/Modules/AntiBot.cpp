@@ -14,5 +14,5 @@ AntiBot::~AntiBot() {
 }
 
 const char* AntiBot::getModuleName() {
-	return ("AntiBot");
+	return "AntiBot";
 }

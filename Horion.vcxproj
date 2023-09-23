@@ -540,12 +540,14 @@
     <ClInclude Include="SDK\Inventory.h" />
     <ClInclude Include="SDK\InventoryTransaction.h" />
     <ClInclude Include="SDK\Item.h" />
+    <ClInclude Include="SDK\Level.h" />
     <ClInclude Include="SDK\LoopbackPacketSender.h" />
     <ClInclude Include="SDK\MinecraftUIRenderContext.h" />
     <ClInclude Include="SDK\MoveInputHandler.h" />
     <ClInclude Include="SDK\Packet.h" />
     <ClInclude Include="SDK\PlayerMovementProxy.h" />
     <ClInclude Include="SDK\RakNetInstance.h" />
+    <ClInclude Include="SDK\ScreenContext.h" />
     <ClInclude Include="SDK\UIScene.h" />
     <ClInclude Include="SDK\Dimension.h" />
     <ClInclude Include="SDK\MatrixStack.h" />

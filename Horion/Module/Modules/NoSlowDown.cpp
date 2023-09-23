@@ -12,7 +12,7 @@ NoSlowDown::~NoSlowDown() {
 }
 
 const char* NoSlowDown::getModuleName() {
-	return ("NoSlowDown");
+	return "NoSlowDown";
 }
 
 void NoSlowDown::onEnable() {

@@ -8,7 +8,7 @@ AutoSneak::~AutoSneak() {
 }
 
 const char* AutoSneak::getModuleName() {
-	return ("AutoSneak");
+	return "AutoSneak";
 }
 
 void AutoSneak::onTick(GameMode* gm) {

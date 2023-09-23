@@ -7,5 +7,5 @@ RainbowSky::~RainbowSky() {
 }
 
 const char* RainbowSky::getModuleName() {
-	return ("RainbowSky");
+	return "RainbowSky";
 }

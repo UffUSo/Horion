@@ -8,7 +8,7 @@ Step::~Step() {
 }
 
 const char* Step::getModuleName() {
-	return ("Step");
+	return "Step";
 }
 
 void Step::onTick(GameMode* gm) {

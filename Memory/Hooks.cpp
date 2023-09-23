@@ -171,7 +171,7 @@ void Hooks::Init() {
 
 		// LocalPlayer::vtable
 		{
-			uintptr_t** localPlayerVtable = GetVtableFromSig("48 8D 05 ? ? ? ? 48 89 01 48 8B 05 ? ? ? ? FF 15 ? ? ? ? 4C 8B C0", 3);
+			uintptr_t** localPlayerVtable = GetVtableFromSig("48 8D 05 ? ? ? ? 48 89 01 B8 ? ? ? ? 8D 50 FA 44 8D 48 ? 44 8D 40 ? 66 89 44 ? ? E8 ? ? ? ? 48 8B 8B", 3);
 			if (localPlayerVtable == 0x0)
 				logF("LocalPlayer signature not working!!!");
 			else {
@@ -750,12 +750,12 @@ void Hooks::LoopbackPacketSender_sendToServer(LoopbackPacketSender* a, Packet* p
 		return;
 
 	if (blinkMod->isEnabled()) {
-		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
+		if (packet->isInstanceOf<MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 			if (blinkMod->isEnabled()) {
-				if (packet->isInstanceOf<C_MovePlayerPacket>()) {
-					C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
+				if (packet->isInstanceOf<MovePlayerPacket>()) {
+					MovePlayerPacket* meme = reinterpret_cast<MovePlayerPacket*>(packet);
 					meme->onGround = true;                                                            // Don't take Fall Damages when turned off
-					blinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme));  // Saving the packets
+					blinkMod->getMovePlayerPacketHolder()->push_back(new MovePlayerPacket(*meme));  // Saving the packets
 				} else {
 					blinkMod->getPlayerAuthInputPacketHolder()->push_back(new PlayerAuthInputPacket(*reinterpret_cast<PlayerAuthInputPacket*>(packet)));
 				}
@@ -865,28 +865,22 @@ void Hooks::HIDController_keyMouse(HIDController* _this, void* a2, void* a3) {
 	return;
 }
 
-int Hooks::BlockLegacy_getRenderLayer(BlockLegacy* a1) {
-	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetFastcall<int, BlockLegacy*>();
-
+BlockRenderLayer Hooks::BlockLegacy_getRenderLayer(BlockLegacy* a1) {
+	static auto oFunc = g_Hooks.BlockLegacy_getRenderLayerHook->GetFastcall<BlockRenderLayer, BlockLegacy*>();
 	static auto xrayMod = moduleMgr->getModule<Xray>();
+
 	if (xrayMod->isEnabled()) {
 		char* text = a1->name.getText();
-		if (strstr(text, "ore") == NULL)
-			if (strcmp(text, "lava") != NULL)
-				if (strcmp(text, "water") != NULL)
-					if (strcmp(text, "portal") != NULL)
-						if (strcmp(text, "amethyst_block") != NULL)
-							if (strcmp(text, "ancient_debris") != NULL)
-								if (strcmp(text, "command_block") != NULL)
-									if (strcmp(text, "repeating_command_block") != NULL)
-										if (strcmp(text, "chain_command_block") != NULL)
-											if (strcmp(text, "structure_block") != NULL)
-												if (strcmp(text, "deny") != NULL)
-													if (strcmp(text, "allow") != NULL)
-														if (strcmp(text, "bedrock") != NULL)
-															if (strcmp(text, "border_block") != NULL)
-																return 10;
+		const char* hiddenBlocks[] = {"ore", "lava", "water", "portal", "amethyst_block", "ancient_debris", "command_block", "repeating_command_block", "chain_command_block", "structure_block", "deny", "allow", "bedrock", "border_block"};
+
+		for (const auto& hiddenBlock : hiddenBlocks) {
+			if (strstr(text, hiddenBlock) != NULL)
+				return oFunc(a1);
+		}
+
+		return BlockRenderLayer::RENDERLAYER_BARRIER;
 	}
+
 	return oFunc(a1);
 }
 
@@ -901,34 +895,20 @@ __int8* Hooks::BlockLegacy_getLightEmission(BlockLegacy* a1, __int8* a2) {
 	return a2;
 }
 
-__int64 Hooks::LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3) {
-	static auto oFunc = g_Hooks.LevelRenderer_renderLevelHook->GetFastcall<__int64, __int64, __int64, __int64>();
-
-	using reloadShit_t = void(__fastcall*)(__int64, unsigned __int64*, char);
-	static reloadShit_t reloadChunk = nullptr;
-
-	if (!reloadChunk) {
-		// RenderChunkCoordinator::rebuildAllRenderChunkGeometry
-		reloadChunk = reinterpret_cast<reloadShit_t>(FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 45 0F B6 F0"));
-	}
+__int64 Hooks::LevelRenderer_renderLevel(LevelRenderer* _this, ScreenContext* screenContext, __int64 a3) {
+	static auto oFunc = g_Hooks.LevelRenderer_renderLevelHook->GetFastcall<__int64, LevelRenderer*, ScreenContext*, __int64>();
 
 	static auto xrayMod = moduleMgr->getModule<Xray>();
 
 	static bool lastState = false;
 	if (lastState != xrayMod->isEnabled()) {
-		// LevelRenderer::rebuildAllRenderChunkGeometry
 		lastState = xrayMod->isEnabled();
-		unsigned long long* v5;  // rdi
-		unsigned long long* i;   // rbx
-
-		v5 = *(unsigned long long**)(_this + 32);
-		for (i = (unsigned long long*)*v5; i != v5; i = (unsigned long long*)*i)
-			reloadChunk(i[3], v5, 1);
+		_this->rebuildAllRenderChunkGeometry();
 	}
 
-	auto ret = oFunc(_this, a2, a3);
+	auto ret = oFunc(_this, screenContext, a3);
 
-	DrawUtils::setGameRenderContext(a2);
+	DrawUtils::setGameRenderContext(screenContext);
 	moduleMgr->onLevelRender();
 	DrawUtils::setGameRenderContext(0);
 

@@ -8,7 +8,7 @@ AirJump::~AirJump() {
 }
 
 const char* AirJump::getModuleName() {
-	return ("AirJump");
+	return "AirJump";
 }
 
 void AirJump::onTick(GameMode* gm) {

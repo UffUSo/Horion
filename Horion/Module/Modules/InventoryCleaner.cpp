@@ -15,7 +15,7 @@ InventoryCleaner::~InventoryCleaner() {
 }
 
 const char* InventoryCleaner::getModuleName() {
-	return ("InvCleaner");
+	return "InvCleaner";
 }
 
 void InventoryCleaner::onTick(GameMode* gm) {

@@ -12,7 +12,7 @@ NoFall::NoFall() : IModule(VK_NUMPAD3, Category::PLAYER, "Prevents you from taki
 NoFall::~NoFall() {}
 
 const char* NoFall::getModuleName() {
-	return ("NoFall");
+	return "NoFall";
 }
 
 void NoFall::onSendPacket(Packet* packet) {
@@ -21,8 +21,8 @@ void NoFall::onSendPacket(Packet* packet) {
 		return;
 
 	if (localPlayer->getFallDistanceComponent()->fallDistance > 2.f && mode.selected == 0) {
-		if (packet->isInstanceOf<C_MovePlayerPacket>()) {
-			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+		if (packet->isInstanceOf<MovePlayerPacket>()) {
+			MovePlayerPacket* movePacket = reinterpret_cast<MovePlayerPacket*>(packet);
 			movePacket->onGround = true;
 		}
 	}
@@ -31,8 +31,8 @@ void NoFall::onSendPacket(Packet* packet) {
 			PlayerAuthInputPacket* authInput = reinterpret_cast<PlayerAuthInputPacket*>(packet);
 			authInput->pos = closestGround;
 		}
-		/*if (packet->isInstanceOf<C_MovePlayerPacket>() && !Game.getLocalPlayer()->isOnGround()) { I don't know if this is better to have or not
-			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+		/*if (packet->isInstanceOf<MovePlayerPacket>() && !Game.getLocalPlayer()->isOnGround()) { I don't know if this is better to have or not
+			MovePlayerPacket* movePacket = reinterpret_cast<MovePlayerPacket*>(packet);
 			movePacket->Position = closestGround;
 		}*/
 	}
@@ -72,7 +72,7 @@ void NoFall::onTick(GameMode* gm) {
 			}
 			case 4: {
 				Vec3 blockBelow = *localPlayer->getPos();
-				blockBelow.y -= localPlayer->aabb->height;
+				blockBelow.y -= localPlayer->getAABBShapeComponent()->aabb.height;
 				blockBelow.y -= 0.17999f;
 				while (localPlayer->getRegion()->getBlock(blockBelow)->blockLegacy->blockId == 0 && !localPlayer->getRegion()->getBlock(blockBelow)->blockLegacy->isSolid) {
 					blockBelow.y -= 1.f;

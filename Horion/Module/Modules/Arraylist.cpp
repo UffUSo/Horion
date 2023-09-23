@@ -12,7 +12,7 @@ Arraylist::~Arraylist() {
 }
 
 const char* Arraylist::getModuleName() {
-	return ("Arraylist");
+	return "Arraylist";
 }
 
 struct IModuleContainer {

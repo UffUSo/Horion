@@ -12,7 +12,7 @@ Reach::~Reach() {
 }
 
 const char* Reach::getModuleName() {
-	return ("Reach");
+	return "Reach";
 }
 
 void Reach::onTick(GameMode* gm) {

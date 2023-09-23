@@ -44,3 +44,13 @@ struct BlockSourceComponent {
 struct ActorGameTypeComponent {
 	enum GameType gameType;
 };
+
+struct RenderPositionComponent {
+public:
+	Vec3 renderPos;
+};
+
+struct AABBShapeComponent {
+public:
+	AABB aabb;
+};

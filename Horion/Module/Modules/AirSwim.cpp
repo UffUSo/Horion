@@ -7,7 +7,7 @@ AirSwim::~AirSwim() {
 }
 
 const char* AirSwim::getModuleName() {
-	return ("AirSwim");
+	return "AirSwim";
 }
 
 void AirSwim::onEnable() {

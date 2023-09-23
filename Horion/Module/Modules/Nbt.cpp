@@ -9,7 +9,7 @@ Nbt::~Nbt() {
 }
 
 const char* Nbt::getModuleName() {
-	return ("Nbt");
+	return "Nbt";
 }
 
 void Nbt::onTick(GameMode* gm) {

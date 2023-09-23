@@ -31,7 +31,7 @@ AutoArmor::~AutoArmor() {
 }
 
 const char* AutoArmor::getModuleName() {
-	return ("AutoArmor");
+	return "AutoArmor";
 }
 
 void AutoArmor::onTick(GameMode* gm) {

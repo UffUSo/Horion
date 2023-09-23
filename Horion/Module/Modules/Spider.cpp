@@ -50,7 +50,7 @@ void Spider::onMove(MoveInputHandler* input) {
 	}
 
 	auto pPos = *player->getPos();
-	pPos.y = player->aabb->lower.y;
+	pPos.y = player->getAABBShapeComponent()->aabb.lower.y;
 	auto pPosI = Vec3i(pPos.floor());
 
 	auto isObstructed = [&](int yOff, AABB* obstructingBlock = nullptr, bool ignoreYcoll = false) {
@@ -67,7 +67,7 @@ void Spider::onMove(MoveInputHandler* input) {
 			AABB collisionVec;
 			if (!blockLegacy->getCollisionShape(&collisionVec, block, player->getRegion(), &side, player))
 				continue;
-			bool intersects = ignoreYcoll ? collisionVec.intersectsXZ(player->aabb->expandedXZ(0.1f)) : collisionVec.intersects(player->aabb->expandedXZ(0.1f));
+			bool intersects = ignoreYcoll ? collisionVec.intersectsXZ(player->getAABBShapeComponent()->aabb.expandedXZ(0.1f)) : collisionVec.intersects(player->getAABBShapeComponent()->aabb.expandedXZ(0.1f));
 			
 			if (intersects) {
 				if (obstructingBlock != nullptr)

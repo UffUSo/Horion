@@ -27,5 +27,5 @@ int EditionFaker::getFakedEditon() {
 }
 
 const char* EditionFaker::getModuleName() {
-	return ("EditionFaker");
+	return "EditionFaker";
 }

@@ -8,7 +8,7 @@ Timer::~Timer() {
 }
 
 const char* Timer::getModuleName() {
-	return ("Timer");
+	return "Timer";
 }
 
 void Timer::onTick(GameMode* gm) {

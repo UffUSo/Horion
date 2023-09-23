@@ -100,9 +100,19 @@ public:
 class LevelRenderer {
 public:
 	BUILD_ACCESS(this, LevelRendererPlayer*, levelRendererPlayer, 0x2F8);
+	BUILD_ACCESS(this, unsigned long long*, renderChunkCoordinator, 0x20);
 
 	Vec3 getOrigin() {
 		return levelRendererPlayer->origin;
+	}
+
+	void rebuildAllRenderChunkGeometry() {
+		using ChunkPtr = unsigned long long*;
+		using ReloadFunction = void(__fastcall*)(__int64, ChunkPtr, char);
+		static ReloadFunction reloadChunk = reinterpret_cast<ReloadFunction>(FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 45 0F B6 F0"));
+		
+		for (ChunkPtr chunk = reinterpret_cast<ChunkPtr>(*renderChunkCoordinator); chunk != renderChunkCoordinator; chunk = reinterpret_cast<ChunkPtr>(*chunk))
+			reloadChunk(chunk[3], renderChunkCoordinator, 1);
 	}
 };
 

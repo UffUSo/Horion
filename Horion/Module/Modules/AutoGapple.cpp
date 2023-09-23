@@ -9,7 +9,7 @@ AutoGapple::~AutoGapple() {
 }
 
 const char* AutoGapple::getModuleName() {
-	return ("AutoGapple");
+	return "AutoGapple";
 }
 
 int AutoGapple::findGapple() {

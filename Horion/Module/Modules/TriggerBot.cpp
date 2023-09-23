@@ -10,7 +10,7 @@ TriggerBot::~TriggerBot() {
 }
 
 const char* TriggerBot::getModuleName() {
-	return ("TriggerBot");
+	return "TriggerBot";
 }
 void TriggerBot::onTick(GameMode* gm) {
 	LocalPlayer* localPlayer = Game.getLocalPlayer();

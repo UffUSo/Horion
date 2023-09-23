@@ -13,7 +13,7 @@ StorageESP::~StorageESP() {
 }
 
 const char* StorageESP::getModuleName() {
-	return ("StorageESP");
+	return "StorageESP";
 }
 
 void StorageESP::onPreRender(MinecraftUIRenderContext* renderCtx) {

@@ -97,9 +97,9 @@ private:
 	static void MultiLevelPlayer_tick(EntityList* entityList);
 	static void GameMode_startDestroyBlock(GameMode* _this, Vec3i* a2, uint8_t face, void* a4, void* a5);
 	static void HIDController_keyMouse(HIDController* _this, void* a2, void* a3);
-	static int BlockLegacy_getRenderLayer(BlockLegacy* a1);
+	static BlockRenderLayer BlockLegacy_getRenderLayer(BlockLegacy* a1);
 	static __int8* BlockLegacy_getLightEmission(BlockLegacy* _this, __int8* a2);
-	static __int64 LevelRenderer_renderLevel(__int64 _this, __int64 a2, __int64 a3);
+	static __int64 LevelRenderer_renderLevel(LevelRenderer* _this, ScreenContext* screenContext, __int64 a3);
 	static void ClickFunc(__int64 a1, char a2, char a3, __int16 a4, __int16 a5, __int16 a6, __int16 a7, char a8);
 	static void MoveInputHandler_tick(__int64 a1, int* a2, uint32_t* a3, __int64* a4, MoveInputHandler* input, int a6);
 	static __int64 ChestScreenController_tick(ChestScreenController* _this);

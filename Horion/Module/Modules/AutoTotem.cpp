@@ -7,7 +7,7 @@ AutoTotem::~AutoTotem() {
 }
 
 const char* AutoTotem::getModuleName() {
-	return ("AutoTotem");
+	return "AutoTotem";
 }
 
 void AutoTotem::onTick(GameMode* gm) {

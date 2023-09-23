@@ -9,5 +9,5 @@ Teams::~Teams() {
 }
 
 const char* Teams::getModuleName() {
-	return ("Teams");
+	return "Teams";
 }

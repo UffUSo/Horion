@@ -12,7 +12,7 @@ ESP::~ESP() {
 }
 
 const char* ESP::getModuleName() {
-	return ("ESP");
+	return "ESP";
 }
 
 static float rcolors[4];
@@ -21,19 +21,21 @@ void doRenderStuff(Entity* ent, bool isRegularEntity) {
 	static auto espMod = moduleMgr->getModule<ESP>();
 
 	LocalPlayer* localPlayer = Game.getLocalPlayer();
+
 	if (ent == localPlayer)
 		return;
 
 	static auto noFriendsModule = moduleMgr->getModule<NoFriends>();
-	if (!noFriendsModule->isEnabled() && FriendsManager::findFriend(ent->getNameTag()->getText())) {
+
+	if (!noFriendsModule->isEnabled() && FriendsManager::findFriend(ent->getNameTag()->getText()))
 		DrawUtils::setColor(0.1f, 0.9f, 0.1f, 1.f);
-	} else if (Target::isValidTarget(ent)) {
+	else if (Target::isValidTarget(ent)) {
 		if (espMod->doRainbow)
 			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], 1.f);
 		else
 			DrawUtils::setColor(0.9f, 0.9f, 0.9f, 1.f);
 	} else if (espMod->isMobEsp) {
-		if (ent->getNameTag()->getTextLength() <= 1 && ent->isPlayer())
+		if (ent->getNameTag()->getTextLength() <= 1 && ent->getEntityTypeId() == 63)
 			return;
 
 		if (ent->getEntityTypeId() == 64)  // Item
@@ -45,18 +47,17 @@ void doRenderStuff(Entity* ent, bool isRegularEntity) {
 		if (!localPlayer->canAttack(ent, false))
 			return;
 
-		if (espMod->doRainbow) {
+		if (espMod->doRainbow)
 			DrawUtils::setColor(rcolors[0], rcolors[1], rcolors[2], 1.f);
-		} else {
-			DrawUtils::setColor(0.9f, 0.9f, 0.9f, 1.f);
-		}
-
-		float drawDistance = (float)fmax(0.5f, 1 / (float)fmax(1, localPlayer->getPos()->dist(*ent->getPos())));
-		if (espMod->is2d)
-			DrawUtils::draw2D(ent, drawDistance * 3.f);
 		else
-			DrawUtils::drawEntityBox(ent, drawDistance);
-	}
+			DrawUtils::setColor(0.9f, 0.9f, 0.9f, 1.f);
+	} else
+		return;
+
+	if (espMod->is2d)
+		DrawUtils::draw2D(ent, (float)fmax(0.5f, 1 / (float)fmax(1, localPlayer->getRenderPositionComponent()->renderPos.dist(ent->getRenderPositionComponent()->renderPos) * 3.f)));
+	else
+		DrawUtils::drawEntityBox(ent, (float)fmax(0.5f, 1 / (float)fmax(1, localPlayer->getRenderPositionComponent()->renderPos.dist(ent->getRenderPositionComponent()->renderPos))));
 }
 
 void ESP::onPreRender(MinecraftUIRenderContext* renderCtx) {

@@ -10,7 +10,7 @@ ClientTheme::~ClientTheme() {
 }
 
 const char* ClientTheme::getModuleName() {
-	return ("ClientTheme");
+	return "ClientTheme";
 }
 
 unsigned char mode = 0;

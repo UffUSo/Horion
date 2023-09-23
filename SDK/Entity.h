@@ -13,71 +13,12 @@
 #include "GameType.h"
 #include "Inventory.h"
 #include "InventoryTransaction.h"
+#include "Level.h"
 #include "PlayerMovementProxy.h"
 #include "TextHolder.h"
 
 class GameMode;
-
-class Level {
-	char pad_0x0[0xBF0];
-public:
-	int rayHitType;
-	int blockSide;
-	Vec3i block;
-	Vec3 rayHitVec;
-	Entity *entityPtr;
-	Entity *entityPtr2;
-	uint64_t GamingEntityFinder;
-
-	BUILD_ACCESS(this, int, levelTicks, 0x8A0);
-
-public:
-	bool hasEntity();     // to not go trough the entity list twice
-	Entity *getEntity();  // returns the entity that the player is looking at
-	int getLevelTicks() {
-		// return levelTicks;
-		return *reinterpret_cast<int *>(reinterpret_cast<__int64>(this) + 0x8A0);
-	}
-
-	class LoopbackPacketSender *getLoopbackPacketSender() {
-		return *reinterpret_cast<class LoopbackPacketSender **>(reinterpret_cast<__int64>(this) + 0xBD8);
-	}
-
-	void playSound(std::string sound, Vec3 const &position, float volume, float pitch) {
-		static uintptr_t sig = 0x0;
-
-		if (sig == 0)
-			sig = FindSignature("48 89 5C ? ? 48 89 6C ? ? 48 89 74 ? ? 57 48 83 EC ? 48 8B 41 ? 33 FF");
-
-		using playSound_t = void(__fastcall *)(Level *, TextHolder *, Vec3 const &, float, float);
-		static playSound_t func = reinterpret_cast<playSound_t>(sig);
-		if (func != nullptr) func(this, &TextHolder(sound), position, volume, pitch);
-	}
-
-	// Credits to hacker hansen for this
-	std::vector<Entity *> getMiscEntityList() { // Level::getRuntimeActorList
-		static uintptr_t sig = 0x0;
-
-		if (sig == 0)
-			sig = FindSignature("40 53 48 83 EC ? 48 81 C1 ? ? ? ? 48 8B DA E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC 48 8B 81");
-
-		using entityList_t = std::int64_t *(__fastcall *)(Level *, void *);
-		static entityList_t func = reinterpret_cast<entityList_t>(sig);
-		if (func != nullptr) {
-			std::unique_ptr<char[]> alloc = std::make_unique<char[]>(0x18);
-			std::int64_t *listStart = func(this, alloc.get());
-			std::size_t listSize = ((*reinterpret_cast<std::int64_t *>(reinterpret_cast<std::int64_t>(listStart) + 0x8)) - (*listStart)) / 0x8;
-			Entity **entityList = reinterpret_cast<Entity **>(*listStart);
-			std::vector<Entity *> res;
-			res.reserve(listSize);
-			if (listSize > 0 && listSize < 5000) {
-				for (std::size_t i = 0; i < listSize; i++) res.push_back(entityList[i]);
-			}
-			return res;
-		}
-		return {};
-	}
-};
+class Level;
 
 class Player;
 class Dimension;
@@ -102,7 +43,6 @@ public:
 	BUILD_ACCESS(this, Dimension *, dimension, 0x250);
 	BUILD_ACCESS(this, Level *, level, 0x260);
 	BUILD_ACCESS(this, EntityLocation *, entityLocation, 0x2A0);
-	BUILD_ACCESS(this, AABB*, aabb, 0x2A8);
 	BUILD_ACCESS(this, int, deviceIdentifier, 0x848);
 
 	virtual int getStatusFlag(ActorFlags);
@@ -458,10 +398,6 @@ public:
 public:
 	InventoryTransactionManager *getTransactionManager();
 
-	AABB *getAABB() {
-		return this->aabb;
-	}
-
 	__int64 *getUniqueId() {
 		using getUniqueId_t = __int64*(__thiscall *)(Entity*);
 		static auto getUniqueIdFunc = reinterpret_cast<getUniqueId_t>(FindSignature("40 53 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B 51 ? 48 8B D9 8B 41"));
@@ -523,15 +459,6 @@ public:
 
 	void setOnGround(bool onGround) {
 		getMovementProxy()->setOnGround(onGround);
-	}
-
-	Vec3 getRenderPos() {
-		Vec3 pos = *getPos();
-
-		if (!isPlayer())
-			pos.add(0.f, aabb->height - 0.125f, 0.f);
-
-		return pos;
 	}
 
 	void setPos(Vec3 vec) {
@@ -607,6 +534,20 @@ public:
 	ActorGameTypeComponent *getActorGameTypeComponent() {
 		using getActorGameTypeComponent = ActorGameTypeComponent *(__cdecl *)(__int64 *, uint32_t *);
 		static auto func = reinterpret_cast<getActorGameTypeComponent>(FindSignature("40 53 48 83 EC ? 48 8B DA BA DE AB CB AF"));
+		uint32_t id = this->entityId;
+		return func(*this->entityRegistryBase, &id);
+	}
+
+	RenderPositionComponent *getRenderPositionComponent() {
+		using getRenderPositionComponent = RenderPositionComponent *(__cdecl *)(void *, uint32_t *);
+		static auto func = reinterpret_cast<getRenderPositionComponent>(FindSignature("40 53 48 83 EC ? 48 8B DA BA 6E F3 E8 D4"));
+		uint32_t id = this->entityId;
+		return func(*this->entityRegistryBase, &id);
+	}
+
+	AABBShapeComponent *getAABBShapeComponent() {
+		using getAABBShapeComponent = AABBShapeComponent *(__cdecl *)(void *, uint32_t *);
+		static auto func = reinterpret_cast<getAABBShapeComponent>(FindSignature("40 53 48 83 EC ? 48 8B DA BA F2 C9 10 1B"));
 		uint32_t id = this->entityId;
 		return func(*this->entityRegistryBase, &id);
 	}
@@ -860,10 +801,7 @@ public:
 		TurnFunc(this, viewAngles);
 	}
 	GameMode *getGameMode() {
-		static unsigned int offset = 0;
-		if (offset == NULL)
-			offset = *reinterpret_cast<int *>(FindSignature("48 8B BE ? ? ? ? 48 8B 8E ? ? ? ? 48 89 6C") + 3);
-		return *reinterpret_cast<GameMode **>((uintptr_t)(this) + offset);
+		return *reinterpret_cast<GameMode **>((uintptr_t)(this) + 0xEF8);
 	}
 	void applyTurnDelta(Vec2 *viewAngleDelta);
 };

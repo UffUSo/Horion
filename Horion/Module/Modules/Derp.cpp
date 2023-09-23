@@ -14,7 +14,7 @@ const char* Derp::getModuleName() {
 
 void Derp::onTick(GameMode* gm) {
 	if (packetMode) {
-		C_MovePlayerPacket p(Game.getLocalPlayer(), *Game.getLocalPlayer()->getPos());
+		MovePlayerPacket p(Game.getLocalPlayer(), *Game.getLocalPlayer()->getPos());
 		if (epicStroke) {
 			p.pitch = (float)(rand() % 360);
 			p.yaw = (float)(rand() % 360);

@@ -9,7 +9,7 @@ ClickGuiMod::~ClickGuiMod() {
 }
 
 const char* ClickGuiMod::getModuleName() {
-	return ("ClickGui");
+	return "ClickGui";
 }
 
 void ClickGuiMod::onEnable() {

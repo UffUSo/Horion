@@ -10,7 +10,7 @@ Nuker::~Nuker() {
 }
 
 const char* Nuker::getModuleName() {
-	return ("Nuker");
+	return "Nuker";
 }
 
 void Nuker::onTick(GameMode* gm) {

@@ -17,7 +17,7 @@ Aimbot::~Aimbot() {
 }
 
 const char* Aimbot::getModuleName() {
-	return ("Aimbot");
+	return "Aimbot";
 }
 
 struct CompareTargetEnArray {
@@ -56,7 +56,7 @@ void findEntity713(Entity* currentEntity, bool isRegularEntity) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->isPlayer())
 			return;
 
-		if (currentEntity->aabb->width <= 0.01f || currentEntity->aabb->height <= 0.01f)  // Don't hit this pesky antibot on 2b2e.org
+		if (currentEntity->getAABBShapeComponent()->aabb.width <= 0.01f || currentEntity->getAABBShapeComponent()->aabb.height <= 0.01f)  // Don't hit this pesky antibot on 2b2e.org
 			return;
 
 		if (currentEntity->getEntityTypeId() == 64) // item

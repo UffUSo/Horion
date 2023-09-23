@@ -9,5 +9,5 @@ Velocity::~Velocity() {
 }
 
 const char* Velocity::getModuleName() {
-	return ("Velocity");
+	return "Velocity";
 }

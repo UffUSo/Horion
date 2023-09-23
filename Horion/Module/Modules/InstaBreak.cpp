@@ -7,5 +7,5 @@ InstaBreak::~InstaBreak() {
 }
 
 const char* InstaBreak::getModuleName() {
-	return ("InstaBreak");
+	return "InstaBreak";
 }

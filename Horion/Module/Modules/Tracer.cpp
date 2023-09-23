@@ -28,9 +28,9 @@ void Tracer::onLevelRender() {
 
 		const Vec3 origin = Game.getClientInstance()->levelRenderer->getOrigin().add(moveVec); /*place the start of the line slightly forward so it won't get clipped*/
 		Game.forEachEntity([&](Entity* ent, bool valid) {
-			if (ent != Game.getLocalPlayer() && Target::isValidTarget(ent) && Game.canUseMoveKeys()) {
+			if (Target::isValidTarget(ent) && Game.canUseMoveKeys()) {
 				DrawUtils::setColor(255, 255, 255, 1);
-				DrawUtils::drawLine3d(origin, ent->getRenderPos(), true);
+				DrawUtils::drawLine3d(origin, *ent->getPos(), true);
 			}
 		});
 	}
@@ -48,7 +48,7 @@ void Tracer::onPreRender(MinecraftUIRenderContext* renderCtx) {
 				Vec2 screenSize;
 				screenSize.x = Game.getGuiData()->widthGame;
 				screenSize.y = Game.getGuiData()->heightGame;
-				refdef2->OWorldToScreen(Game.getClientInstance()->levelRenderer->getOrigin(), ent->getRenderPos(), target, Game.getClientInstance()->getFov(), screenSize);
+				refdef2->OWorldToScreen(Game.getClientInstance()->levelRenderer->getOrigin(), ent->getRenderPositionComponent()->renderPos, target, Game.getClientInstance()->getFov(), screenSize);
 				Vec2 mid(((Game.getClientInstance()->getGuiData()->widthGame) / 2), ((Game.getClientInstance()->getGuiData()->heightGame) / 2));
 				if (target != Vec2(0, 0)) {
 					DrawUtils::setColor(255, 255, 255, 1);

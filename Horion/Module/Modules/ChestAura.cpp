@@ -9,7 +9,7 @@ ChestAura::~ChestAura() {
 }
 
 const char* ChestAura::getModuleName() {
-	return ("ChestAura");
+	return "ChestAura";
 }
 
 void ChestAura::onTick(GameMode* gm) {

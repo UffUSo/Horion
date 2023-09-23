@@ -21,8 +21,8 @@ void Godmode::onTick(GameMode* gm) {
 }
 
 void Godmode::onSendPacket(Packet* p) {
-	if (p->isInstanceOf<C_MovePlayerPacket>()) {
-		C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(p);
+	if (p->isInstanceOf<MovePlayerPacket>()) {
+		MovePlayerPacket* movePacket = reinterpret_cast<MovePlayerPacket*>(p);
 		movePacket->onGround = true;
 	} /*else if (p->isInstanceOf<C_ActorFallPacket>()) {
 		C_ActorFallPacket* fallPacket = reinterpret_cast<C_ActorFallPacket*>(p);

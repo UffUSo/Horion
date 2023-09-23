@@ -17,7 +17,7 @@ PacketLogger::PacketLogger() : IModule(0x0, Category::WORLD, "Logs packets, Pack
 PacketLogger::~PacketLogger() {}
 
 const char* PacketLogger::getModuleName() {
-	return ("PacketLogger");
+	return "PacketLogger";
 }
 
 void PacketLogger::onSendPacket(Packet* packet) {

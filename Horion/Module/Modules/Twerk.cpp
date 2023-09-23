@@ -8,7 +8,7 @@ Twerk::~Twerk() {
 }
 
 const char* Twerk::getModuleName() {
-	return ("Twerk");
+	return "Twerk";
 }
 
 void Twerk::onTick(GameMode* gm) {

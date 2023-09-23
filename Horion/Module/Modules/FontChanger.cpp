@@ -9,5 +9,5 @@ FontChanger::~FontChanger() {
 }
 
 const char* FontChanger::getModuleName() {
-	return ("CustomFont");
+	return "CustomFont";
 }

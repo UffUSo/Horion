@@ -8,7 +8,7 @@ AutoSprint::~AutoSprint() {
 }
 
 const char* AutoSprint::getModuleName() {
-	return ("AutoSprint");
+	return "AutoSprint";
 }
 
 void AutoSprint::onTick(GameMode* gm) {

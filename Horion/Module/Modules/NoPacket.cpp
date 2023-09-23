@@ -7,7 +7,7 @@ NoPacket::~NoPacket() {
 }
 
 const char* NoPacket::getModuleName() {
-	return ("NoPacket");
+	return "NoPacket";
 }
 bool NoPacket::allowAutoStart() {
 	return false;

@@ -6,7 +6,7 @@ OffhandAllow::OffhandAllow() : IModule(0, Category::MISC, "Let's you place any i
 OffhandAllow::~OffhandAllow() {}
 
 const char* OffhandAllow::getModuleName() {
-	return ("OffhandAllow");
+	return "OffhandAllow";
 }
 
 void OffhandAllow::onEnable() {

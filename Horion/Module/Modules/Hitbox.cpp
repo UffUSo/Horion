@@ -9,7 +9,7 @@ Hitbox::~Hitbox() {
 }
 
 const char* Hitbox::getModuleName() {
-	return ("Hitbox");
+	return "Hitbox";
 }
 
 void findTarget(Entity* currentEntity, bool isRegularEntitie) {
@@ -30,8 +30,8 @@ void findTarget(Entity* currentEntity, bool isRegularEntitie) {
 	float dist = (*currentEntity->getPos()).dist(*Game.getLocalPlayer()->getPos());
 
 	if (dist < hitboxMod->range) {
-		currentEntity->aabb->width = hitboxMod->width;
-		currentEntity->aabb->height = hitboxMod->height;
+		currentEntity->getAABBShapeComponent()->aabb.width = hitboxMod->width;
+		currentEntity->getAABBShapeComponent()->aabb.height = hitboxMod->height;
 	}
 	
 }

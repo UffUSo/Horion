@@ -31,12 +31,7 @@ std::string FriendsManager::getFromList(int Friend) {
 }
 
 bool FriendsManager::findFriend(const std::string& name) {
-	for (std::vector<std::string>::iterator it = friends.List.begin(); it != friends.List.end(); ++it) {
-		if (it->find(name) != std::string::npos) {
-			return true;
-		}
-	}
-	return false;
+	return std::find(friends.List.begin(), friends.List.end(), name) != friends.List.end();
 }
 
 bool FriendsManager::removeFriend(const std::string& g) {

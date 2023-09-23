@@ -11,12 +11,12 @@ class MaterialPtr {
 };
 
 using tess_vertex_t = void(__fastcall*)(Tessellator* _this, float v1, float v2, float v3);
-using meshHelper_renderImm_t = void(__fastcall*)(__int64, Tessellator* tessellator, MaterialPtr*);
+using meshHelper_renderImm_t = void(__fastcall*)(ScreenContext*, Tessellator* tessellator, MaterialPtr*);
 
 MinecraftUIRenderContext* renderCtx;
 GuiData* guiData;
-__int64 screenContext2d;
-__int64 game3dContext;
+ScreenContext* screenContext2d;
+ScreenContext* game3dContext;
 Tessellator* tessellator;
 float* colorHolder;
 std::shared_ptr<glmatrixf> refdef;
@@ -53,21 +53,26 @@ void initializeSigs() {
 void DrawUtils::setCtx(MinecraftUIRenderContext* ctx, GuiData* gui) {
 	if (!hasInitializedSigs)
 		initializeSigs();
+
 	LARGE_INTEGER EndingTime, ElapsedMicroseconds;
 	LARGE_INTEGER Frequency;
 	QueryPerformanceFrequency(&Frequency);
 	QueryPerformanceCounter(&EndingTime);
 	ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - Game.getLastUpdateTime();
-
 	ElapsedMicroseconds.QuadPart *= 1000000;
+
 	int ticksPerSecond = 20;
-	if(Game.getClientInstance()->minecraft)
+
+	if (Game.getClientInstance()->minecraft)
 		if (Game.getClientInstance()->minecraft->simTimer != nullptr)
 			ticksPerSecond = (int)*Game.getClientInstance()->minecraft->simTimer;
-	if(ticksPerSecond < 1)
+
+	if (ticksPerSecond < 1)
 		ticksPerSecond = 1;
+
 	ElapsedMicroseconds.QuadPart /= Frequency.QuadPart / ticksPerSecond;
 	lerpT = (ElapsedMicroseconds.QuadPart / 1000000.f);
+
 	if (lerpT > 1)
 		lerpT = 1;
 	else if (lerpT < 0)
@@ -75,10 +80,10 @@ void DrawUtils::setCtx(MinecraftUIRenderContext* ctx, GuiData* gui) {
 
 	guiData = gui;
 	renderCtx = ctx;
-	screenContext2d = reinterpret_cast<__int64*>(renderCtx)[2];
+	screenContext2d = reinterpret_cast<ScreenContext**>(renderCtx)[2];
 
-	tessellator = *reinterpret_cast<Tessellator**>(screenContext2d + 0xC0);
-	colorHolder = *reinterpret_cast<float**>(screenContext2d + 0x30);
+	tessellator = screenContext2d->getTessellator();
+	colorHolder = screenContext2d->getColorHolder();
 
 	glmatrixf* badrefdef = Game.getClientInstance()->getRefDef();
 
@@ -86,6 +91,7 @@ void DrawUtils::setCtx(MinecraftUIRenderContext* ctx, GuiData* gui) {
 	fov = Game.getClientInstance()->getFov();
 	screenSize.x = gui->widthGame;
 	screenSize.y = gui->heightGame;
+
 	if (Game.getClientInstance()->levelRenderer != nullptr)
 		origin = Game.getClientInstance()->levelRenderer->getOrigin();
 
@@ -135,16 +141,15 @@ Font* DrawUtils::getFont(Fonts font) {
 }
 
 Tessellator* DrawUtils::get3dTessellator() {
-	auto myTess = *reinterpret_cast<Tessellator**>(game3dContext + 0xC0);
-	return myTess;
+	return game3dContext->getTessellator();
 }
 
-__int64 DrawUtils::getScreenContext() {
+ScreenContext* DrawUtils::getScreenContext() {
 	return game3dContext == 0 ? screenContext2d : game3dContext;
 }
 
 MatrixStack* DrawUtils::getMatrixStack() {
-	return reinterpret_cast<MatrixStack*>(*reinterpret_cast<__int64*>(DrawUtils::getScreenContext() + 0x18i64) + 0x30i64);
+	return reinterpret_cast<MatrixStack*>(*reinterpret_cast<__int64*>(*reinterpret_cast<__int64*>(DrawUtils::getScreenContext()) + 0x18i64) + 0x30i64);
 }
 
 float DrawUtils::getTextWidth(std::string* textStr, float textSize, Fonts font) {
@@ -462,7 +467,7 @@ void DrawUtils::drawNameTags(Entity* ent, float textSize, bool drawHealth, bool 
 	float textWidth = getTextWidth(&text, textSize);
 	float textHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * textSize;
 
-	if (refdef->OWorldToScreen(origin, ent->getRenderPos().add(0, 0.5f, 0), textPos, fov, screenSize)) {
+	if (refdef->OWorldToScreen(origin, ent->getRenderPositionComponent()->renderPos.add(0, 0.5f, 0), textPos, fov, screenSize)) {
 		textPos.y -= textHeight;
 		textPos.x -= textWidth / 2.f;
 		rectPos.x = textPos.x - 1.f * textSize;
@@ -509,14 +514,14 @@ void DrawUtils::drawEntityBox(Entity* ent, float lineWidth, bool fill) {
 	Vec3 end = *ent->getPos();
 	AABB render;
 	if (ent->isPlayer()) {
-		render = AABB(end, ent->aabb->width, ent->aabb->height, ent->aabb->height);
+		render = AABB(end, ent->getAABBShapeComponent()->aabb.width, ent->getAABBShapeComponent()->aabb.height, ent->getAABBShapeComponent()->aabb.height);
 		render.upper.y += 0.2f;
 		render.lower.y += 0.2f;
 	} else
-		render = AABB(end, ent->aabb->width, ent->aabb->height, 0);
+		render = AABB(end, ent->getAABBShapeComponent()->aabb.width, ent->getAABBShapeComponent()->aabb.height, 0);
 	render.upper.y += 0.1f;
 
-	float LineWidth = (float)fmax(0.5f, 1 / (float)fmax(1, (float)Game.getLocalPlayer()->getPos()->dist(end)));
+	float LineWidth = (float)fmax(0.5f, 1 / (float)fmax(1, (float)Game.getLocalPlayer()->getRenderPositionComponent()->renderPos.dist(end)));
 	DrawUtils::drawBox(render.lower, render.upper, lineWidth == 0 ? LineWidth : lineWidth, fill);
 }
 
@@ -525,11 +530,11 @@ void DrawUtils::draw2D(Entity* ent, float lineWidth) {
 	Vec3 end = *ent->getPos();
 	AABB render;
 	if (ent->isPlayer()) {
-		render = AABB(end, ent->aabb->width, ent->aabb->height, ent->aabb->height);
+		render = AABB(end, ent->getAABBShapeComponent()->aabb.width, ent->getAABBShapeComponent()->aabb.height, ent->getAABBShapeComponent()->aabb.height);
 		render.upper.y += 0.2f;
 		render.lower.y += 0.2f;
 	} else
-		render = AABB(end, ent->aabb->width, ent->aabb->height, 0);
+		render = AABB(end, ent->getAABBShapeComponent()->aabb.width, ent->getAABBShapeComponent()->aabb.height, 0);
 	render.upper.y += 0.1f;
 
 	Vec3 worldPoints[8];
@@ -751,7 +756,7 @@ inline void DrawUtils::tess__begin(Tessellator* tess, int vertexFormat, int numV
 	static tess_begin_t tess_begin = reinterpret_cast<tess_begin_t>(FindSignature("48 89 5C 24 ?? 55 48 83 EC ?? 80 B9 ?? ?? ?? ?? 00 45"));
 	tess_begin(tess, vertexFormat, numVerticesReserved);
 }
-void DrawUtils::setGameRenderContext(std::int64_t ctx) {
+void DrawUtils::setGameRenderContext(ScreenContext* ctx) {
 	game3dContext = ctx;
 	if (Game.getClientInstance()->levelRenderer != nullptr)
 		origin = Game.getClientInstance()->levelRenderer->getOrigin();

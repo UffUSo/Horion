@@ -8,7 +8,7 @@ Criticals::~Criticals() {
 }
 
 const char* Criticals::getModuleName() {
-	return ("Criticals");
+	return "Criticals";
 }
 
 void Criticals::onTick(GameMode* gm) {
@@ -16,9 +16,9 @@ void Criticals::onTick(GameMode* gm) {
 		LocalPlayer* player = Game.getLocalPlayer();
 		Vec3 pos = *player->getPos();
 		pos.y += 2.f;
-		C_MovePlayerPacket movePlayerPacket;
+		MovePlayerPacket movePlayerPacket;
 		movePlayerPacket.onGround = false;
-		movePlayerPacket = C_MovePlayerPacket(player, pos);
+		movePlayerPacket = MovePlayerPacket(player, pos);
 		PlayerAuthInputPacket authInputPacket;
 		authInputPacket = PlayerAuthInputPacket(pos, player->getActorHeadRotationComponent()->rot.x, player->getActorHeadRotationComponent()->rot.y, player->getActorRotationComponent()->rot.y);
 		Game.getClientInstance()->loopbackPacketSender->sendToServer(&movePlayerPacket);
@@ -31,8 +31,8 @@ void Criticals::onSendPacket(Packet* packet) {
 	if (player != nullptr) {
 		Vec3 pos = *player->getPos();
 		pos.y += 2.f;
-		if (packet->isInstanceOf<C_MovePlayerPacket>() && player != nullptr) {
-			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+		if (packet->isInstanceOf<MovePlayerPacket>() && player != nullptr) {
+			MovePlayerPacket* movePacket = reinterpret_cast<MovePlayerPacket*>(packet);
 			movePacket->onGround = false;
 			movePacket->Position = pos;
 		}

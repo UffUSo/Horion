@@ -12,6 +12,8 @@ void Target::init(LocalPlayer** cl) {
 }
 
 bool Target::isValidTarget(Entity* ent) {
+	if (ent == nullptr)
+		return false;
 
 	auto localPlayer = Game.getLocalPlayer();
 
@@ -30,7 +32,7 @@ bool Target::isValidTarget(Entity* ent) {
 
 	auto entityTypeId = ent->getEntityTypeId();
 
-	if (antibot->isEntityIdCheckEnabled() && entityTypeId <= 130 && !ent->isPlayer())
+	if (antibot->isEntityIdCheckEnabled() && entityTypeId <= 130 && entityTypeId != 63)
 		return false;
 
 	if (ent->isPlayer()) {
@@ -77,11 +79,11 @@ bool Target::isValidTarget(Entity* ent) {
 	if (antibot->isInvisibleCheckEnabled() && ent->isInvisible())
 		return false;
 
-	if (antibot->isOtherCheckEnabled() && (ent->isSilent() || ent->isImmobile() || ent->getNameTag()->getTextLength() < 1 || std::string(ent->getNameTag()->getText()).find(std::string("\n")) != std::string::npos))
+	if (antibot->isOtherCheckEnabled() && (ent->isSilent() || ent->getNameTag()->getTextLength() < 1 || std::string(ent->getNameTag()->getText()).find(std::string("\n")) != std::string::npos))
 		return false;
 
 	if (!hitboxMod->isEnabled() && antibot->isHitboxCheckEnabled())
-		if ((ent->aabb->height < 1.5f || ent->aabb->width < 0.49f || ent->aabb->height > 2.1f || ent->aabb->width > 0.9f))
+		if ((ent->getAABBShapeComponent()->aabb.height < 1.5f || ent->getAABBShapeComponent()->aabb.width < 0.49f || ent->getAABBShapeComponent()->aabb.height > 2.1f || ent->getAABBShapeComponent()->aabb.width > 0.9f))
 			return false;
 
 	if (!localPlayer->canAttack(ent, false))
@@ -93,7 +95,6 @@ bool Target::isValidTarget(Entity* ent) {
 	if (antibot->isPlayerCheckEnabled() && !ent->isPlayer())
 		return false;
 
-	return (ent != nullptr);
 	return true;
 }
 

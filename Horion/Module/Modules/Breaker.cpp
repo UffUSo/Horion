@@ -14,7 +14,7 @@ Breaker::~Breaker() {
 }
 
 const char* Breaker::getModuleName() {
-	return ("Breaker");
+	return "Breaker";
 }
 
 void Breaker::onTick(GameMode* gm) {

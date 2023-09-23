@@ -7,7 +7,7 @@ Xray::~Xray() {
 }
 
 const char* Xray::getModuleName() {
-	return ("Xray");
+	return "Xray";
 }
 
 void Xray::onTick(GameMode* gm) {

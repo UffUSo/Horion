@@ -8,5 +8,5 @@ FastLadder::~FastLadder() {
 }
 
 const char* FastLadder::getModuleName() {
-	return ("FastLadder");
+	return "FastLadder";
 }

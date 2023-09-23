@@ -10,7 +10,7 @@ ChestStealer::~ChestStealer() {
 }
 
 const char* ChestStealer::getModuleName() {
-	return ("ChestStealer");
+	return "ChestStealer";
 }
 
 void ChestStealer::chestScreenController_tick(ChestScreenController* c) {

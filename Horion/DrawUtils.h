@@ -87,13 +87,13 @@ public:
 	static bool shouldToggleRightClick;
 	
 	static void setCtx(MinecraftUIRenderContext* ctx, GuiData* guiData);
-	static void setGameRenderContext(__int64 ctx);
+	static void setGameRenderContext(ScreenContext* ctx);
 	static void flush();
 	static void setColor(float r, float g, float b, float a);  // rgba, values from 0 to 1
 	static inline void tess__begin(Tessellator* tesselator, int vertexFormat = 3, int numVerticesReserved = 0);
 	static Font* getFont(Fonts font);
 	static Tessellator* get3dTessellator();
-	static __int64 getScreenContext();
+	static ScreenContext* getScreenContext();
 	static MatrixStack* getMatrixStack();
 	static float getTextWidth(std::string* textStr, float textSize = 1, Fonts font = Fonts::SMOOTH);
 	static float getFontHeight(float textSize = 1, Fonts font = Fonts::SMOOTH);

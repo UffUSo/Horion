@@ -11,13 +11,13 @@ Spammer::~Spammer() {
 }
 
 const char* Spammer::getModuleName() {
-	return ("Spammer");
+	return "Spammer";
 }
 
 void Spammer::onTick(GameMode* gm) {
 	Odelay++;
 	if (Odelay > delay * 20) {
-		C_TextPacket textPacket;
+		TextPacket textPacket;
 		textPacket.message.setText(bypass ? (message + " | " + Utils::randomString(length)) : message);
 		textPacket.sourceName.setText(Game.getLocalPlayer()->getNameTag()->getText());
 		textPacket.xboxUserId = std::to_string(Game.getLocalPlayer()->getUserId());

@@ -15,7 +15,7 @@ CrystalAura::CrystalAura() : IModule(VK_NUMPAD0, Category::COMBAT, "Destroys nea
 CrystalAura::~CrystalAura() {
 }
 const char* CrystalAura::getModuleName() {
-	return ("CrystalAura");
+	return "CrystalAura";
 }
 
 static std::vector<Entity*> targetList;
@@ -52,7 +52,7 @@ bool CanPlaceC(Vec3i* pos) {
 	Game.forEachEntity([](Entity* ent, bool b) {
 		if (!space)
 			return;
-		if (ent->aabb->intersects(AABB(_pos, _pos.add(1.f))))
+		if (ent->getAABBShapeComponent()->aabb.intersects(AABB(_pos, _pos.add(1.f))))
 			space = false;
 	});
 	return space;
