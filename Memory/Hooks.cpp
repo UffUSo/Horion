@@ -1167,7 +1167,6 @@ bool Hooks::Mob__isImmobile(Entity* ent) {
 
 void Hooks::Actor__setRot(Entity* _this, Vec2& angle) {
 	static auto func = g_Hooks.Actor__setRotHook->GetFastcall<void, Entity*, Vec2&>();
-	static auto killauraMod = moduleMgr->getModule<Killaura>();
 	static auto freelookMod = moduleMgr->getModule<Freelook>();
 	static auto freecamMod = moduleMgr->getModule<Freecam>();
 	if (_this == Game.getLocalPlayer()) {
@@ -1175,7 +1174,6 @@ void Hooks::Actor__setRot(Entity* _this, Vec2& angle) {
 			freecamMod->yaw = angle.y;
 			angle = {freecamMod->initialViewAngles.x, freecamMod->initialViewAngles.y};
 		}
-		if (killauraMod->isEnabled() && !killauraMod->targetListEmpty && killauraMod->rotations) angle = killauraMod->angle;
 		if (freelookMod->isEnabled()) angle = freelookMod->oldPos;
 	}
 	func(_this, angle);

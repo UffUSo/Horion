@@ -7,15 +7,14 @@
 class Killaura : public IModule
 {
 private:
-	bool isMulti = true;
 	int delay = 0;
 	int Odelay = 0;
 	bool autoweapon = false;
 	void findWeapon();
-	bool silent = true;
+	SettingEnum mode{this};
+	SettingEnum rotationMode{this};
 
 public:
-	bool rotations = false;
 	bool targetListEmpty = false;
 	Vec2 angle;
 	bool isMobAura = false;
@@ -31,4 +30,5 @@ public:
 	virtual void onTick(GameMode* gm) override;
 	virtual void onEnable() override;
 	virtual void onSendPacket(Packet* packet) override;
+	virtual void onPlayerTick(Player* player) override;
 };

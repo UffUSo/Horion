@@ -1,14 +1,19 @@
 #include "Killaura.h"
 
 Killaura::Killaura() : IModule('P', Category::COMBAT, "Attacks entities around you automatically.") {
-	registerBoolSetting("MultiAura", &isMulti, isMulti);
+	mode.addEntry(EnumEntry("Single", 0))
+		.addEntry(EnumEntry("Multi", 1));
+	registerEnumSetting("Mode", &mode, 0);
+	rotationMode.addEntry(EnumEntry("None", 0))
+		.addEntry(EnumEntry("Silent", 1))
+		.addEntry(EnumEntry("Strafe", 2))
+		.addEntry(EnumEntry("Normal", 3));
+	registerEnumSetting("Rotations", &rotationMode, 2);
 	registerBoolSetting("MobAura", &isMobAura, isMobAura);
 	registerFloatSetting("Range", &range, range, 2.f, 20.f);
 	registerIntSetting("Delay", &delay, delay, 0, 20);
 	registerBoolSetting("Hurttime", &hurttime, hurttime);
 	registerBoolSetting("AutoWeapon", &autoweapon, autoweapon);
-	registerBoolSetting("Rotations", &rotations, rotations);
-	registerBoolSetting("Silent Rotations", &silent, silent);
 }
 
 Killaura::~Killaura() {
@@ -102,7 +107,7 @@ void Killaura::onTick(GameMode* gm) {
 		}
 
 		// Attack all entitys in targetList
-		if (isMulti) {
+		if (mode.selected == 1) {
 			for (auto& i : targetList) {
 				if (!(i->damageTime > 1 && hurttime)) {
 					Game.getLocalPlayer()->swing();
@@ -115,9 +120,6 @@ void Killaura::onTick(GameMode* gm) {
 				Game.getGameMode()->attack(targetList[0]);
 			}
 		}
-		if (rotations) {
-			angle = Game.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
-		}
 		Odelay = 0;
 	}
 }
@@ -128,13 +130,34 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onSendPacket(Packet* packet) {
-	if (packet->isInstanceOf<MovePlayerPacket>() && Game.getLocalPlayer() != nullptr && silent) {
-		if (!targetList.empty()) {
+	if (Game.getLocalPlayer() != nullptr && rotationMode.selected == 1 && !targetList.empty()) {
+		if (targetList[0] == nullptr)
+			return;
+
+		if (packet->isInstanceOf<MovePlayerPacket>()) {
 			auto* movePacket = reinterpret_cast<MovePlayerPacket*>(packet);
-			Vec2 angle = Game.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
+			Vec2 angle = Game.getLocalPlayer()->getPos()->CalcAngle(targetList[0]->getMovementProxy()->getAttachPos(ActorLocation::Eyes, 1.f));
 			movePacket->pitch = angle.x;
 			movePacket->headYaw = angle.y;
 			movePacket->yaw = angle.y;
 		}
+	}
+}
+
+void Killaura::onPlayerTick(Player* player) {
+	if (Game.getLocalPlayer() != nullptr && !targetList.empty() && rotationMode.selected > 1) {
+		if (targetList[0] == nullptr)
+			return;
+
+		Vec2 angle = Game.getLocalPlayer()->getPos()->CalcAngle(targetList[0]->getMovementProxy()->getAttachPos(ActorLocation::Eyes, 1.f));
+
+		if (rotationMode.selected == 3)
+			player->getActorRotationComponent()->rot.x = angle.x;
+		else if (rotationMode.selected == 2)
+			player->getActorRotationComponent()->rot = angle;
+
+		player->getActorHeadRotationComponent()->rot.y = angle.y;
+		player->getMobBodyRotationComponent()->bodyRot = angle.y;
+		player->getMovementProxy()->setYHeadRot(angle.y);
 	}
 }
