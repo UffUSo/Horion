@@ -36,7 +36,7 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 			delete boy;
 		} else {
 			if (level->getEntity() != nullptr) {
-				if (Game.getRakNetInstance()->serverIp.getTextLength() >= 1) {
+				if (Game.getRakNetConnector()->isonaServer()) {
 					clientMessageF("%sNBT tags for mobs only works in local world!", RED);
 					return true;
 				}

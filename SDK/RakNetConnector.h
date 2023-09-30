@@ -1,14 +1,14 @@
 #pragma once
 
-class RakNetInstance {
-	char pad_0000[0x428];  // 0x0000
+class RakNetConnector {
+	char pad_0x0[0x420];  // 0x0
 public:
-	TextHolder numericalIp;  // 0x03D0
+	TextHolder numericalIp;  // 0x420
 	TextHolder serverIp;
 	uint32_t serverPort;
 
 private:
-	virtual ~RakNetInstance();
+	virtual ~RakNetConnector();
 public:
 	virtual TextHolder* getLocalIps(TextHolder*);
 	virtual TextHolder* getLocalIp(TextHolder*);
@@ -39,4 +39,4 @@ public:
 public:
 	bool isonaServer() { return !(serverIp.getTextLength() < 1); }
 
-};                         //Size: 0x0848
+};

@@ -11,7 +11,7 @@
 #include "../SDK/GameMode.h"
 #include "../SDK/HIDController.h"
 #include "../SDK/MoveInputHandler.h"
-#include "../SDK/RakNetInstance.h"
+#include "../SDK/RakNetConnector.h"
 #include "../Utils/SkinUtil.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
@@ -176,7 +176,7 @@ public:
 	GameMode* getGameMode() { return gameMode; };
 	EntityList* getEntityList() { return entityList; };
 	HIDController** getHIDController() { return &hidController; };
-	RakNetInstance* getRakNetInstance() { return this->getClientInstance()->loopbackPacketSender->networkHandler->rakNetInstance; };
+	RakNetConnector* getRakNetConnector() { return this->getClientInstance()->loopbackPacketSender->networkSystem->remoteConnectorComposite->rakNetConnector; };
 	std::unordered_set<AABB, AABBHasher>& getChestList() { return chestList; };
 	auto lockChestList() { return std::lock_guard<std::mutex>(chestListMutex); }
 	void setFakeName(TextHolder* name) { fakeName = name; };

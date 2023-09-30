@@ -24,7 +24,7 @@
 #include "../SDK/GameMode.h"
 #include "../SDK/MinecraftUIRenderContext.h"
 #include "../SDK/MoveInputHandler.h"
-#include "../SDK/RakNetInstance.h"
+#include "../SDK/RakNetConnector.h"
 #include "../SDK/TextHolder.h"
 #include "../SDK/UIScene.h"
 #include "../Utils/Logger.h"
