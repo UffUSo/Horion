@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#ifdef _DEBUG
+#ifdef _DEV
 #include <ios>
 #include <iosfwd>
 #include <iostream>

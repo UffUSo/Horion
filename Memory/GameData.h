@@ -12,7 +12,6 @@
 #include "../SDK/HIDController.h"
 #include "../SDK/MoveInputHandler.h"
 #include "../SDK/RakNetConnector.h"
-#include "../Utils/SkinUtil.h"
 #include "../Utils/TextFormat.h"
 #include "SlimMem.h"
 

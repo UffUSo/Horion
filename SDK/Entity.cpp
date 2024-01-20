@@ -35,10 +35,6 @@ void LocalPlayer::applyTurnDelta(Vec2 *viewAngleDelta) {
 	TurnDelta(this, viewAngleDelta);
 }
 
-bool Level::hasEntity() {
-	return rayHitType == 1;
-}
-
 float Entity::getBlocksPerSecond() {
 	return getTicksPerSecond() * *Game.getClientInstance()->minecraft->simTimer;
 }
@@ -47,16 +43,4 @@ void Entity::lerpTo(Vec3 const &pos, Vec2 const &rot, int steps) { //lerpTo was 
 	using lerpTo = void(__fastcall *)(Entity *, Vec3 const &, Vec2 const &, int);
 	static lerpTo lerp = reinterpret_cast<lerpTo>(FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 41 ? 48 8B F9 48 8B DA"));
 	lerp(this, pos, rot, steps);
-}
-
-Entity *Level::getEntity() {
-	if (rayHitType != 1) return nullptr;
-	Entity *retval = nullptr;
-	Game.forEachEntity([this, &retval](Entity *ent, bool b) {
-		if (*(__int64 *)((__int64)ent + 0x10) == GamingEntityFinder) {
-			retval = ent;
-			return;
-		}
-	});
-	return retval;
 }

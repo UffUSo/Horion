@@ -72,7 +72,7 @@ void NoFall::onTick(GameMode* gm) {
 			}
 			case 4: {
 				Vec3 blockBelow = *localPlayer->getPos();
-				blockBelow.y -= localPlayer->getAABBShapeComponent()->aabb.height;
+				blockBelow.y -= localPlayer->getAABBShapeComponent()->size.y;
 				blockBelow.y -= 0.17999f;
 				while (localPlayer->getRegion()->getBlock(blockBelow)->blockLegacy->blockId == 0 && !localPlayer->getRegion()->getBlock(blockBelow)->blockLegacy->isSolid) {
 					blockBelow.y -= 1.f;

@@ -40,7 +40,7 @@
 #include "Commands/RepairCommand.h"
 #include "Commands/DeviceIDCommand.h"
 
-#ifdef _DEBUG
+#ifdef _DEV
 #include "Commands/TestCommand.h"
 #endif
 

@@ -36,7 +36,7 @@
 
 void Utils::ApplySystemTime(std::stringstream* ss) {
 	using namespace std::chrono;
-#ifdef _DEBUG
+#ifdef _DEV
 	const std::chrono::system_clock::time_point systemNow = system_clock::now();
 	auto ms = duration_cast<milliseconds>(systemNow.time_since_epoch()) % 10000;
 	time_t now_c = system_clock::to_time_t(systemNow);
@@ -216,7 +216,7 @@ uintptr_t Utils::FindSignatureModule(const char* szModule, const char* szSignatu
 			firstMatch = 0;
 		}
 	}
-#ifdef _DEBUG
+#ifdef _DEV
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-variable"

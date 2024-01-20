@@ -23,7 +23,7 @@ void NoSlowDown::onEnable() {
 
 	DWORD oldProtect = 0;
 	if (!VirtualProtect(opcode, 5, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 		logF("couldnt unprotect memory send help");
 		__debugbreak();
 #endif
@@ -37,7 +37,7 @@ void NoSlowDown::onEnable() {
 	}
 
 	if (!VirtualProtect(opcode1, 5, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 		logF("couldnt unprotect memory send help");
 		__debugbreak();
 #endif
@@ -59,7 +59,7 @@ void NoSlowDown::onDisable() {
 
 	DWORD oldProtect = 0;
 	if (!VirtualProtect(opcode, 5, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 		logF("couldnt unprotect memory send help");
 		__debugbreak();
 #endif
@@ -73,7 +73,7 @@ void NoSlowDown::onDisable() {
 	};
 
 	if (!VirtualProtect(opcode1, 5, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 		logF("couldnt unprotect memory send help");
 		__debugbreak();
 #endif

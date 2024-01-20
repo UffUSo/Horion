@@ -16,6 +16,8 @@
 #include "Level.h"
 #include "PlayerMovementProxy.h"
 #include "TextHolder.h"
+#include "EntityContext.h"
+#include "../entt/src/entt/entity/registry.hpp"
 
 class GameMode;
 class Level;
@@ -36,9 +38,11 @@ struct EntityLocation {
 #pragma pack(push, 4)
 class Entity {
 public:
+	EntityContext ctx;
+
 	BUILD_ACCESS(this, __int64 **, entityRegistryBase, 0x8);
 	BUILD_ACCESS(this, uint32_t, entityId, 0x10);
-	BUILD_ACCESS(this, int, damageTime, 0x188);
+	BUILD_ACCESS(this, int16_t, damageTime, 0x188);
 	BUILD_ACCESS(this, int, ticksAlive, 0x200);
 	BUILD_ACCESS(this, Dimension *, dimension, 0x250);
 	BUILD_ACCESS(this, Level *, level, 0x260);

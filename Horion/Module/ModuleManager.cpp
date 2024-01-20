@@ -114,7 +114,7 @@ void ModuleManager::initModules() {
 		moduleList.emplace_back(new Fly());
 		moduleList.emplace_back(new ESP());
 
-#ifdef _DEBUG
+#ifdef _DEV
 		moduleList.emplace_back(new PacketLogger());
 		moduleList.emplace_back(new VanillaPlus());
 		moduleList.emplace_back(new TestModule());

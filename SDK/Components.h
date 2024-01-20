@@ -53,4 +53,5 @@ public:
 struct AABBShapeComponent {
 public:
 	AABB aabb;
+	Vec2 size;
 };

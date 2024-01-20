@@ -53,7 +53,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new SayCommand());
 	commandList.push_back(new XpCommand());
 
-#ifdef _DEBUG
+#ifdef _DEV
 	commandList.push_back(new TestCommand());
 #endif
 }

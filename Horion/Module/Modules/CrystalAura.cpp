@@ -68,7 +68,7 @@ void CrystalAura::CPlace(GameMode* gm, Vec3* pos) {
 		Block* block = gm->player->getRegion()->getBlock(blockPos);
 		Block* upperBlock = gm->player->getRegion()->getBlock(upperBlockPos);
 		bool idk = true;
-		gm->buildBlock(&blockPos, Game.getLocalPlayer()->level->blockSide, idk);
+		gm->buildBlock(&blockPos, (uint8_t)Game.getLocalPlayer()->level->hitResult.facing, idk);
 		return;
 	}
 	Vec3i bestPos;
@@ -154,8 +154,8 @@ void CrystalAura::onTick(GameMode* gm) {
 					CPlace(gm, i->getPos());
 			else {
 				auto ptr = Game.getLocalPlayer()->level;
-				if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
-					CPlace(gm, &ptr->block.toFloatVector());
+				if (ptr->getEntity() == nullptr && ptr->hitResult.type == HitResultType::Tile)
+					CPlace(gm, &ptr->hitResult.blockPos.toFloatVector());
 			}
 		}
 		return;
@@ -193,12 +193,12 @@ void CrystalAura::onPreRender(MinecraftUIRenderContext* renderCtx) {
 	
 	auto ptr = Game.getLocalPlayer()->level;
 	if (ptr != nullptr)
-		if (ptr->getEntity() == nullptr && ptr->rayHitType == 0)
-			if (Game.getLocalPlayer()->getRegion()->getBlock(ptr->block)->toLegacy()->blockId == 49 ||
-				Game.getLocalPlayer()->getRegion()->getBlock(ptr->block)->toLegacy()->blockId == 7) {
+		if (ptr->getEntity() == nullptr && ptr->hitResult.type == HitResultType::Tile)
+			if (Game.getLocalPlayer()->getRegion()->getBlock(ptr->hitResult.blockPos)->toLegacy()->blockId == 49 ||
+				Game.getLocalPlayer()->getRegion()->getBlock(ptr->hitResult.blockPos)->toLegacy()->blockId == 7) {
 				DrawUtils::setColor(.75f, .25f, .5f, 1.f);
-				DrawUtils::drawBox(ptr->block.toVec3t().add(0.f, 1.5f, 0.f),
-								   ptr->block.add(1).toVec3t().add(0.f, 1.5f, 0.f), .3f);
+				DrawUtils::drawBox(ptr->hitResult.blockPos.toVec3t().add(0.f, 1.5f, 0.f),
+								   ptr->hitResult.blockPos.add(1).toVec3t().add(0.f, 1.5f, 0.f), .3f);
 			}
 }
 

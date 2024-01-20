@@ -31,10 +31,10 @@ void AutoClicker::onTick(GameMode* gm) {
 				gm->attack(level->getEntity());
 			else if (breakBlocks) {
 				bool isDestroyed = false;
-				gm->startDestroyBlock(level->block, level->blockSide, isDestroyed);
-				gm->stopDestroyBlock(level->block);
-				if (isDestroyed && player->getRegion()->getBlock(level->block)->blockLegacy->blockId != 0)
-					gm->destroyBlock(&level->block, 0);
+				gm->startDestroyBlock(level->hitResult.blockPos, (uint8_t)level->hitResult.facing, isDestroyed);
+				gm->stopDestroyBlock(level->hitResult.blockPos);
+				if (isDestroyed && player->getRegion()->getBlock(level->hitResult.blockPos)->blockLegacy->blockId != 0)
+					gm->destroyBlock(&level->hitResult.blockPos, 0);
 			}
 			Odelay = 0;
 		}
@@ -46,7 +46,7 @@ void AutoClicker::onTick(GameMode* gm) {
 			Odelay++;
 			if (Odelay >= delay) {
 				bool idk = true;
-				gm->buildBlock(new Vec3i(level->block), level->blockSide, idk);
+				gm->buildBlock(&(Vec3i(level->hitResult.blockPos)), (uint8_t)level->hitResult.facing, true);
 				Odelay = 0;
 			}
 		}

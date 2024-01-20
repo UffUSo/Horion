@@ -83,7 +83,7 @@ bool Target::isValidTarget(Entity* ent) {
 		return false;
 
 	if (!hitboxMod->isEnabled() && antibot->isHitboxCheckEnabled())
-		if ((ent->getAABBShapeComponent()->aabb.height < 1.5f || ent->getAABBShapeComponent()->aabb.width < 0.49f || ent->getAABBShapeComponent()->aabb.height > 2.1f || ent->getAABBShapeComponent()->aabb.width > 0.9f))
+		if ((ent->getAABBShapeComponent()->size.y < 1.5f || ent->getAABBShapeComponent()->size.x < 0.49f || ent->getAABBShapeComponent()->size.y > 2.1f || ent->getAABBShapeComponent()->size.y > 0.9f))
 			return false;
 
 	if (!localPlayer->canAttack(ent, false))

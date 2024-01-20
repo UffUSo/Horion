@@ -77,7 +77,7 @@ void Tower::onPostRender(MinecraftUIRenderContext* renderCtx) {
 		return;
 
 	Vec3 blockBelow = *Game.getLocalPlayer()->getPos();  // Block below the player
-	blockBelow.y -= Game.getLocalPlayer()->getAABBShapeComponent()->aabb.height;
+	blockBelow.y -= Game.getLocalPlayer()->getAABBShapeComponent()->size.y;
 	blockBelow.y -= 0.5f;
 
 	// Adjustment by velocity

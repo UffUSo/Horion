@@ -22,7 +22,7 @@ void GameData::retrieveClientInstance() {
 		logF("Client: %llX", clientInstanceOffset);
 	}
 	Game.clientInstance = reinterpret_cast<ClientInstance*>(Utils::readPointer<uintptr_t*>(clientInstanceOffset, {0x0, 0x0, 0x48, 0x0}));
-#ifdef _DEBUG
+#ifdef _DEV
 	if (Game.clientInstance == 0)
 		throw std::exception("Client Instance is 0");
 #endif
@@ -106,7 +106,7 @@ void GameData::updateGameData(GameMode* gameMode) {
 void GameData::displayMessages(GuiData* guiData) {
 	auto vecLock = Logger::GetTextToPrintLock();
 	auto* stringPrintVector = Logger::GetTextToPrint();
-#ifdef _DEBUG
+#ifdef _DEV
 	int numPrinted = 0;
 	std::vector<TextForPrint>::iterator it;
 	for (it = stringPrintVector->begin(); it != stringPrintVector->end(); ++it) {
@@ -185,7 +185,7 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	Game.hDllInst = hDllInst;
 	retrieveClientInstance();
 
-#ifdef _DEBUG
+#ifdef _DEV
 	logF("Base: %llX", Game.getModule()->ptrBase);
 	if (Game.clientInstance != nullptr) {
 		logF("ClientInstance: %llX", Game.clientInstance);

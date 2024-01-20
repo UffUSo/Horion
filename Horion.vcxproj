@@ -1,14 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -25,17 +17,6 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <SpectreMitigation>false</SpectreMitigation>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -57,12 +38,6 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -70,12 +45,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;D:\ProgrammeX\Dxx\Lib\x64;$(ProjectDir)minhook;$(LibraryPath)</LibraryPath>
     <IncludePath>D:\ProgrammeX\Dxx\Include;$(ProjectDir)include\glm;$(IncludePath)</IncludePath>
@@ -84,38 +53,6 @@
     <LibraryPath>C:\Program Files %28x86%29\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.16.27023\lib\x64;$(ProjectDir)minhook;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)include\glm</IncludePath>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;HORION_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
-    </ClCompile>
-    <Link>
-      <TargetMachine>MachineX86</TargetMachine>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <AssemblyDebug>true</AssemblyDebug>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;HORION_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-    </ClCompile>
-    <Link>
-      <TargetMachine>MachineX86</TargetMachine>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-    </Link>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -123,9 +60,9 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions);_DEV</PreprocessorDefinitions>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
     </ClCompile>
     <Link />
@@ -144,6 +81,7 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>_WINDLL;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -152,22 +90,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include=".clang-format" />
-    <None Include="packages.config" />
-    <None Include="resources\coolroblox.json" />
-    <None Include="resources\Steve.dat" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="resources\block.3dobj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="bitmap1.bmp" />
-    <Image Include="icon1.ico" />
-    <Image Include="resources\cat.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Horion.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Horion\Command\CommandMgr.cpp" />
@@ -214,7 +136,6 @@
     <ClCompile Include="Horion\DrawUtils.cpp" />
     <ClCompile Include="Horion\FriendList\FriendsManager.cpp" />
     <ClCompile Include="Horion\GuiUtils.cpp" />
-    <ClCompile Include="Horion\ImmediateGui.cpp" />
     <ClCompile Include="Horion\Loader.cpp" />
     <ClCompile Include="Horion\Menu\ClickGui.cpp" />
     <ClCompile Include="Horion\Menu\TabGui.cpp" />
@@ -333,17 +254,16 @@
     <ClCompile Include="SDK\Inventory.cpp" />
     <ClCompile Include="SDK\InventoryTransaction.cpp" />
     <ClCompile Include="SDK\Item.cpp" />
+    <ClCompile Include="SDK\Level.cpp" />
     <ClCompile Include="SDK\Packet.cpp" />
     <ClCompile Include="SDK\MatrixStack.cpp" />
     <ClCompile Include="SDK\Tag.cpp" />
     <ClCompile Include="SDK\Tessellator.cpp" />
     <ClCompile Include="Utils\ClientColors.cpp" />
     <ClCompile Include="Utils\Logger.cpp" />
-    <ClCompile Include="Utils\SkinUtil.cpp" />
     <ClCompile Include="Utils\Target.cpp" />
     <ClCompile Include="Utils\TextFormat.cpp" />
     <ClCompile Include="Utils\Utils.cpp" />
-    <ClCompile Include="Utils\VoxelIntersector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Horion\Command\CommandMgr.h" />
@@ -390,7 +310,6 @@
     <ClInclude Include="Horion\DrawUtils.h" />
     <ClInclude Include="Horion\FriendList\FriendsManager.h" />
     <ClInclude Include="Horion\GuiUtils.h" />
-    <ClInclude Include="Horion\ImmediateGui.h" />
     <ClInclude Include="Horion\Loader.h" />
     <ClInclude Include="Horion\Menu\ClickGui.h" />
     <ClInclude Include="Horion\Menu\TabGui.h" />
@@ -414,7 +333,6 @@
     <ClInclude Include="Horion\Module\Modules\Blink.h" />
     <ClInclude Include="Horion\Module\Modules\BowAimbot.h" />
     <ClInclude Include="Horion\Module\Modules\ChestAura.h" />
-    <ClInclude Include="Horion\Module\Modules\ChestESP.h" />
     <ClInclude Include="Horion\Module\Modules\ChestStealer.h" />
     <ClInclude Include="Horion\Module\Modules\ClickGuiMod.h" />
     <ClInclude Include="Horion\Module\Modules\ClientTheme.h" />
@@ -501,21 +419,6 @@
     <ClInclude Include="Horion\path\JoePathFinder.h" />
     <ClInclude Include="Horion\path\JoeSegment.h" />
     <ClInclude Include="include\atlrx.h" />
-    <ClInclude Include="include\chakra\ChakraCommon.h" />
-    <ClInclude Include="include\chakra\ChakraCommonWindows.h" />
-    <ClInclude Include="include\chakra\ChakraCore.h" />
-    <ClInclude Include="include\chakra\ChakraCoreWindows.h" />
-    <ClInclude Include="include\chakra\ChakraDebug.h" />
-    <ClInclude Include="include\imgui\examples\imgui_impl_dx11.h" />
-    <ClInclude Include="include\imgui\examples\imgui_impl_win32.h" />
-    <ClInclude Include="include\imgui\imconfig.h" />
-    <ClInclude Include="include\imgui\imgui.h" />
-    <ClInclude Include="include\imgui\imgui_internal.h" />
-    <ClInclude Include="include\imgui\imstb_rectpack.h" />
-    <ClInclude Include="include\imgui\imstb_textedit.h" />
-    <ClInclude Include="include\imgui\imstb_truetype.h" />
-    <ClInclude Include="include\imgui\misc\cpp\imgui_stdlib.h" />
-    <ClInclude Include="include\imgui\misc\single_file\imgui_single_file.h" />
     <ClInclude Include="include\RegExp.h" />
     <ClInclude Include="include\StringProcess.h" />
     <ClInclude Include="include\WinHttpClient.h" />
@@ -532,11 +435,14 @@
     <ClInclude Include="SDK\ComplexInventoryTransaction.h" />
     <ClInclude Include="SDK\Components.h" />
     <ClInclude Include="SDK\Entity.h" />
+    <ClInclude Include="SDK\EntityContext.h" />
     <ClInclude Include="SDK\EntityList.h" />
+    <ClInclude Include="SDK\EntityRefs.h" />
     <ClInclude Include="SDK\GameMode.h" />
     <ClInclude Include="SDK\GameSettingsInput.h" />
     <ClInclude Include="SDK\GameType.h" />
     <ClInclude Include="SDK\HIDController.h" />
+    <ClInclude Include="SDK\HitResult.h" />
     <ClInclude Include="SDK\Inventory.h" />
     <ClInclude Include="SDK\InventoryTransaction.h" />
     <ClInclude Include="SDK\Item.h" />
@@ -547,6 +453,7 @@
     <ClInclude Include="SDK\Packet.h" />
     <ClInclude Include="SDK\PlayerMovementProxy.h" />
     <ClInclude Include="SDK\RakNetConnector.h" />
+    <ClInclude Include="SDK\Ref.h" />
     <ClInclude Include="SDK\ScreenContext.h" />
     <ClInclude Include="SDK\UIScene.h" />
     <ClInclude Include="SDK\Dimension.h" />
@@ -556,7 +463,6 @@
     <ClInclude Include="SDK\Tessellator.h" />
     <ClInclude Include="SDK\TextHolder.h" />
     <ClInclude Include="SDK\Weather.h" />
-    <ClInclude Include="Utils\ChakraHelper.h" />
     <ClInclude Include="Utils\ClientColors.h" />
     <ClInclude Include="Utils\ColorUtil.h" />
     <ClInclude Include="Utils\DllHelper.h" />
@@ -564,26 +470,14 @@
     <ClInclude Include="Utils\Json.hpp" />
     <ClInclude Include="Utils\keys.h" />
     <ClInclude Include="Utils\Logger.h" />
-    <ClInclude Include="Utils\SkinUtil.h" />
     <ClInclude Include="Utils\Target.h" />
     <ClInclude Include="Utils\TextFormat.h" />
     <ClInclude Include="Utils\Utils.h" />
-    <ClInclude Include="Utils\VoxelIntersector.h" />
     <ClInclude Include="Utils\xorstr.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="minhook\MinHook.x64.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets" Condition="Exists('packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets')" />
-    <Import Project="packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets" Condition="Exists('packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.XAudio2.Redist.1.2.0\build\native\Microsoft.XAudio2.Redist.targets'))" />
-    <Error Condition="!Exists('packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\directxtk_desktop_2017.2020.2.24.4\build\native\directxtk_desktop_2017.targets'))" />
-  </Target>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

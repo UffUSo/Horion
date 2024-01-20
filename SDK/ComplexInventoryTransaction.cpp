@@ -6,7 +6,7 @@ ComplexInventoryTransaction::ComplexInventoryTransaction(InventoryTransaction& t
 		uintptr_t sigOffset = FindSignature("4C 8D 3D ? ? ? ? 4C 89 7D ? E8 ? ? ? ? 48 89 45 ? 89 75");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		ComplexInventoryTransactionVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-#ifdef _DEBUG
+#ifdef _DEV
 		if (ComplexInventoryTransactionVtable == 0x0 || sigOffset == 0x0)
 			__debugbreak();
 #endif
@@ -27,7 +27,7 @@ ComplexInventoryTransaction::ComplexInventoryTransaction() {
 		uintptr_t sigOffset = FindSignature("4C 8D 3D ? ? ? ? 4C 89 7D ? E8 ? ? ? ? 48 89 45 ? 89 75");
 		int offset = *reinterpret_cast<int*>(sigOffset + 3);
 		ComplexInventoryTransactionVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
-#ifdef _DEBUG
+#ifdef _DEV
 		if (ComplexInventoryTransactionVtable == 0x0 || sigOffset == 0x0)
 			__debugbreak();
 #endif

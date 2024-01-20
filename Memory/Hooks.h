@@ -15,7 +15,6 @@
 #include "../Horion/Command/CommandMgr.h"
 #include "../Horion/Config/ConfigManager.h"
 #include "../Horion/DrawUtils.h"
-#include "../Horion/ImmediateGui.h"
 #include "../Horion/Menu/ClickGui.h"
 #include "../Horion/Module/ModuleManager.h"
 #include "../SDK/BlockLegacy.h"
@@ -28,9 +27,7 @@
 #include "../SDK/TextHolder.h"
 #include "../SDK/UIScene.h"
 #include "../Utils/Logger.h"
-#include "../Utils/SkinUtil.h"
 #include "../Utils/TextFormat.h"
-#include "../resource.h"
 #include "GameData.h"
 #include "MinHook.h"
 

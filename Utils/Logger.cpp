@@ -188,7 +188,7 @@ std::lock_guard<std::mutex> Logger::GetTextToInjectorLock() {
 
 void Logger::Disable() {
 	loggerActive = false;
-#ifdef _DEBUG
+#ifdef _DEV
 	EnterCriticalSection(&loggerLock);
 	auto lock = Logger::GetTextToPrintLock();
 	LeaveCriticalSection(&loggerLock);

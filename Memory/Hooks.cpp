@@ -406,8 +406,6 @@ __int64 Hooks::RenderText(__int64 a1, MinecraftUIRenderContext* renderCtx) {
 		static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 		static auto clientThemeModule = moduleMgr->getModule<ClientTheme>();
 
-		HorionGui.startFrame();
-
 		Game.frameCount++;
 
 		auto wid = Game.getClientInstance()->getGuiData()->windowSize;
@@ -465,7 +463,7 @@ __int64 Hooks::RenderText(__int64 a1, MinecraftUIRenderContext* renderCtx) {
 						constexpr float margin = 5;
 
 						static std::string name = "Horion";
-#ifdef _DEBUG
+#ifdef _DEV
 						static std::string version = "dev";
 #elif defined _BETA
 						static std::string version = "beta";

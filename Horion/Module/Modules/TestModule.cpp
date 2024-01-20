@@ -1,6 +1,5 @@
 #include "TestModule.h"
 #include "../../../Utils/Logger.h"
-#include "../../../Utils/VoxelIntersector.h"
 #include "../../DrawUtils.h"
 #include "../../../SDK/MatrixStack.h"
 #include <deque>
@@ -19,7 +18,6 @@
 #include "../../path/JoeMovementController.h"
 #include "../../path/goals/JoeGoal.h"
 #include "../../path/goals/JoeGoalXZ.h"
-#include "../../ImmediateGui.h"
 #include <chrono>  // for std::this_thread::sleep_for()
 #include <thread>
 #include "../../../Memory/Hooks.h"

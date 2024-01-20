@@ -26,7 +26,7 @@ void VanillaPlus::onEnable() {
 
 		DWORD oldProtect = 0;
 		if (!VirtualProtect(flyingItemsFuncPtr, 26, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 			logF("couldnt unprotect memory send help");
 			__debugbreak();
 #endif
@@ -45,7 +45,7 @@ void VanillaPlus::onTick(GameMode*) {
 	if (flyingItemsFuncPtr && lastFastFlyingItems != fastFlyingItems) {
 		DWORD oldProtect = 0;
 		if (!VirtualProtect(flyingItemsFuncPtr, 26, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 			logF("couldnt unprotect memory send help");
 			__debugbreak();
 #endif
@@ -67,7 +67,7 @@ void VanillaPlus::onDisable() {
 	if (flyingItemsFuncPtr) {
 		DWORD oldProtect = 0;
 		if (!VirtualProtect(flyingItemsFuncPtr, 26, PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 			logF("couldnt unprotect memory send help");
 			__debugbreak();
 #endif

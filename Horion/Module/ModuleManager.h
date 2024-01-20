@@ -106,7 +106,7 @@
 #include "Modules/Fly.h"
 #include "Modules/ESP.h"
 
-#ifdef _DEBUG
+#ifdef _DEV
 #include "Modules/PacketLogger.h"
 #include "Modules/TestModule.h"
 #endif

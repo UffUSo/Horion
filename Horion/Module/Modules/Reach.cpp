@@ -32,7 +32,7 @@ void Reach::onEnable() {
 		}
 	}
 	if (!VirtualProtect(reachPtr, sizeof(float), PAGE_EXECUTE_READWRITE, &oldProtect)) {
-#ifdef _DEBUG
+#ifdef _DEV
 		logF("couldnt unprotect memory send help");
 		__debugbreak();
 #endif

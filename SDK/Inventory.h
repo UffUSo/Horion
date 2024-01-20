@@ -6,9 +6,6 @@ class Inventory;
 class Player;
 
 class Inventory {
-private:
-	virtual ~Inventory();
-
 public:
 	bool isFull();
 	void dropSlot(int slot);
